@@ -55,6 +55,7 @@ export default {
         "light-bg": "hsl(var(--light-bg))",
         "light-border": "hsl(var(--light-bg))",
         gold: "hsl(var(--gold))",
+        shadow: "hsl(var(--shadow))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
