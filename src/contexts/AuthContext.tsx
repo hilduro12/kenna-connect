@@ -11,6 +11,8 @@ interface User {
 interface AuthContextType {
   user: User | null;
   isSubscribed: boolean;
+  previewLoggedIn: boolean;
+  togglePreview: () => void;
   login: (email: string, password: string) => void;
   logout: () => void;
   signup: (data: { name: string; email: string; password: string; role: "student" | "parent" | "tutor" }) => void;
