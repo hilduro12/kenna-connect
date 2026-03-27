@@ -7,7 +7,7 @@ import TutorCard from "@/components/TutorCard";
 import BlurredTutorCard from "@/components/BlurredTutorCard";
 import { tutors } from "@/data/tutors";
 import { useAuth } from "@/contexts/AuthContext";
-import heroImg from "@/assets/hero-illustration.jpg";
+
 
 const subjects = [
   "Mathematics", "Driving", "Piano", "Singing",
