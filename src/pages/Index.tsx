@@ -7,7 +7,7 @@ import TutorCard from "@/components/TutorCard";
 import BlurredTutorCard from "@/components/BlurredTutorCard";
 import { tutors } from "@/data/tutors";
 import { useAuth } from "@/contexts/AuthContext";
-import heroImg from "@/assets/hero-illustration.jpg";
+
 
 const subjects = [
   "Mathematics", "Driving", "Piano", "Singing",
@@ -43,22 +43,22 @@ const Index = () => {
       <Navbar />
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-light-bg">
-        <div className="container grid items-center gap-10 py-16 md:grid-cols-2 md:py-24">
-          <div className="space-y-6">
+      <section className="relative overflow-hidden bg-white">
+        <div className="container py-16 md:py-24">
+          <div className="space-y-6 max-w-2xl">
             <h1 className="text-4xl font-extrabold leading-tight text-foreground md:text-5xl lg:text-6xl">
               Find the teacher that's right for you
             </h1>
-            <p className="max-w-lg text-lg text-steel">
+            <p className="max-w-lg text-lg text-primary">
               Iceland's marketplace for private tutoring — all subjects, all levels.
             </p>
-            <div className="flex flex-col gap-3 sm:flex-row text-secondary-foreground">
-              <select className="rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary sm:w-56">
-                <option value="">Select a subject...</option>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <select className="rounded-lg border border-cold bg-white px-4 py-3 text-sm text-foreground placeholder:text-cold focus:outline-none focus:ring-2 focus:ring-foreground sm:w-56">
+                <option value="" className="text-cold">Select a subject...</option>
                 {subjects.map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
-              <Link to="/browse" className="bg-secondary-foreground">
-                <Button size="lg" className="gap-2 bg-secondary-foreground"><Search size={18} /> Search</Button>
+              <Link to="/browse">
+                <Button size="lg" className="gap-2 bg-foreground text-white hover:bg-primary"><Search size={18} /> Search</Button>
               </Link>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
@@ -66,15 +66,12 @@ const Index = () => {
                 <Link
                   key={cat.name}
                   to={`/browse?subject=${encodeURIComponent(cat.name)}`}
-                  className="rounded-full bg-foreground px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-steel"
+                  className="rounded-full bg-foreground px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary"
                 >
                   {cat.name}
                 </Link>
               ))}
             </div>
-          </div>
-          <div className="hidden md:block">
-            <img src={heroImg} alt="Students learning with a teacher" width={1280} height={720} className="rounded-xl" />
           </div>
         </div>
       </section>
