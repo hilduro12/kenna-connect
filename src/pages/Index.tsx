@@ -66,7 +66,7 @@ const Index = () => {
                 <Link
                   key={cat.name}
                   to={`/browse?subject=${encodeURIComponent(cat.name)}`}
-                  className="rounded-full bg-shadow px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-foreground"
+                  className="rounded-full bg-foreground px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-steel"
                 >
                   {cat.name}
                 </Link>
