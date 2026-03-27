@@ -172,9 +172,7 @@ const Index = () => {
               <Button variant="secondary" size="lg">Subscribe Now</Button>
             </Link>
             <Link to="/tutor-signup">
-              <Button variant="outline" size="lg" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
-                Become a Teacher
-              </Button>
+              <Button variant="secondary" size="lg">Become a Teacher</Button>
             </Link>
           </div>
         </div>
