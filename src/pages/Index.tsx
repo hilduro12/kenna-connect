@@ -53,11 +53,11 @@ const Index = () => {
               Iceland's marketplace for private tutoring — all subjects, all levels.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row text-secondary-foreground">
-              <select className="rounded-lg border border-border bg-secondary-foreground px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary sm:w-56">
+              <select className="rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary sm:w-56">
                 <option value="">Select a subject...</option>
                 {subjects.map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
-              <Link to="/browse">
+              <Link to="/browse" className="bg-secondary-foreground">
                 <Button size="lg" className="gap-2"><Search size={18} /> Search</Button>
               </Link>
             </div>
