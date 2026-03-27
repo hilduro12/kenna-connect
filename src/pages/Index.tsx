@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Search, ShieldCheck, BookOpen, Monitor, Star, Users, MessageCircle, ArrowRight, Lock } from "lucide-react";
+import { Search, ShieldCheck, BookOpen, Monitor, Star, Users, MessageCircle, ArrowRight, Lock, Radical, Car, Piano, Mic, Dumbbell, MessageSquare, Guitar, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
