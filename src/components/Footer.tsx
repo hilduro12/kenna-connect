@@ -35,7 +35,7 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-        <div className="mt-10 border-t border-steel pt-6 text-center text-sm text-cold">
+        <div className="mt-10 border-t border-white/10 pt-6 text-center text-sm text-white/50">
           © 2026 Kenna ehf. All rights reserved.
         </div>
       </div>
