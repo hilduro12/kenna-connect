@@ -7,7 +7,7 @@ import TutorCard from "@/components/TutorCard";
 import BlurredTutorCard from "@/components/BlurredTutorCard";
 import { tutors } from "@/data/tutors";
 import { useAuth } from "@/contexts/AuthContext";
-import heroImg from "@/assets/hero-option-1.jpg";
+
 
 const subjects = [
   "Mathematics", "Driving", "Piano", "Singing",
@@ -44,7 +44,7 @@ const Index = () => {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-white">
-        <div className="container grid items-center gap-10 py-16 md:grid-cols-2 md:py-24">
+        <div className="container py-16 md:py-24">
           <div className="space-y-6">
             <h1 className="text-4xl font-extrabold leading-tight text-foreground md:text-5xl lg:text-6xl">
               Find the teacher that's right for you
@@ -72,9 +72,6 @@ const Index = () => {
                 </Link>
               ))}
             </div>
-          </div>
-          <div className="hidden md:block">
-            <img src={heroImg} alt="One-on-one tutoring session" width={1280} height={720} className="rounded-xl" />
           </div>
         </div>
       </section>
