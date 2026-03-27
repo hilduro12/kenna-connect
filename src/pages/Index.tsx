@@ -145,7 +145,7 @@ const Index = () => {
 
       {/* Testimonials */}
       <section className="container py-16 md:py-20">
-        <h2 className="text-center text-3xl font-bold text-shadow">What people say</h2>
+        <h2 className="text-center text-3xl font-bold text-foreground">What people say</h2>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {testimonials.map((t, i) => (
             <div key={i} className="rounded-lg border border-border bg-card p-6 shadow-sm">
