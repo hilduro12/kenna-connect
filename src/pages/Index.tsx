@@ -67,6 +67,17 @@ const Index = () => {
                 <Button size="lg" className="gap-2"><Search size={18} /> Search</Button>
               </Link>
             </div>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {categories.map((cat) => (
+                <Link
+                  key={cat.name}
+                  to={`/browse?subject=${encodeURIComponent(cat.name)}`}
+                  className="rounded-full border border-light-border bg-background px-4 py-1.5 text-sm font-medium text-steel transition-colors hover:bg-foreground hover:text-background hover:border-foreground"
+                >
+                  {cat.name}
+                </Link>
+              ))}
+            </div>
           </div>
           <div className="hidden md:block">
             <img src={heroImg} alt="Students learning with a teacher" width={1280} height={720} className="rounded-xl" />
