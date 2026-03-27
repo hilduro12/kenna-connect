@@ -11,6 +11,8 @@ interface User {
 interface AuthContextType {
   user: User | null;
   isSubscribed: boolean;
+  previewLoggedIn: boolean;
+  togglePreview: () => void;
   login: (email: string, password: string) => void;
   logout: () => void;
   signup: (data: { name: string; email: string; password: string; role: "student" | "parent" | "tutor" }) => void;
@@ -24,7 +26,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return saved ? JSON.parse(saved) : null;
   });
 
-  const isSubscribed = user?.subscribed ?? false;
+  const [previewLoggedIn, setPreviewLoggedIn] = useState(false);
+  const togglePreview = () => setPreviewLoggedIn((v) => !v);
+
+  const isSubscribed = (user?.subscribed ?? false) || previewLoggedIn;
 
   const login = (email: string, _password: string) => {
     const mockUser: User = {
@@ -56,7 +61,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isSubscribed, login, logout, signup }}>
+    <AuthContext.Provider value={{ user, isSubscribed, previewLoggedIn, togglePreview, login, logout, signup }}>
       {children}
     </AuthContext.Provider>
   );

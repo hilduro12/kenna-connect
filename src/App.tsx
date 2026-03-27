@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
+import PreviewToggle from "./components/PreviewToggle";
 import BrowseTutors from "./pages/BrowseTutors";
 import TutorProfile from "./pages/TutorProfile";
 import TutorSignUp from "./pages/TutorSignUp";
@@ -22,6 +23,7 @@ const App = () => (
       <Sonner />
       <AuthProvider>
         <BrowserRouter>
+          <PreviewToggle />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/browse" element={<BrowseTutors />} />
