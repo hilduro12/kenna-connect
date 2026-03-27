@@ -78,7 +78,7 @@ const Index = () => {
 
       {/* How it works */}
       <section className="container py-16 md:py-20">
-        <h2 className="text-center text-3xl font-bold text-shadow">How it works</h2>
+        <h2 className="text-center text-3xl font-bold text-foreground">How it works</h2>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {steps.map((step, i) => (
             <div key={i} className="rounded-lg border border-border bg-card p-8 text-center shadow-sm">
