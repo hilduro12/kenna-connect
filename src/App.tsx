@@ -23,6 +23,7 @@ const App = () => (
       <Sonner />
       <AuthProvider>
         <BrowserRouter>
+          <PreviewToggle />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/browse" element={<BrowseTutors />} />
