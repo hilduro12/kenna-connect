@@ -58,7 +58,7 @@ const Index = () => {
                 {subjects.map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
               <Link to="/browse">
-                <Button size="lg" className="gap-2 bg-foreground text-white hover:bg-primary"><Search size={18} /> Search</Button>
+                <Button size="lg" className="gap-2 bg-primary text-white hover:bg-foreground"><Search size={18} /> Search</Button>
               </Link>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
@@ -66,7 +66,7 @@ const Index = () => {
                 <Link
                   key={cat.name}
                   to={`/browse?subject=${encodeURIComponent(cat.name)}`}
-                  className="rounded-full bg-foreground px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary"
+                  className="rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-foreground"
                 >
                   {cat.name}
                 </Link>
