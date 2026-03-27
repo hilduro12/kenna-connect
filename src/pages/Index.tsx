@@ -130,7 +130,7 @@ const Index = () => {
       {/* Why Kenna */}
       <section className="bg-light-bg py-16">
         <div className="container">
-          <h2 className="text-center text-3xl font-bold text-shadow">Why Kenna?</h2>
+          <h2 className="text-center text-3xl font-bold text-foreground">Why Kenna?</h2>
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {benefits.map((b, i) => (
               <div key={i} className="rounded-lg bg-background p-6 shadow-sm">
