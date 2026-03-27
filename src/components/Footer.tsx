@@ -12,7 +12,7 @@ const Footer = () => {
             </p>
           </div>
           <div>
-            <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-cold">Platform</h4>
+            <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-white/50">Platform</h4>
             <ul className="space-y-2 text-sm">
               <li><Link to="/browse" className="hover:underline">Browse Tutors</Link></li>
               <li><Link to="/pricing" className="hover:underline">Pricing</Link></li>
