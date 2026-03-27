@@ -73,9 +73,6 @@ const Index = () => {
               ))}
             </div>
           </div>
-          <div className="hidden md:block">
-            <img src={heroImg} alt="One-on-one tutoring session" width={1280} height={720} className="rounded-xl" />
-          </div>
         </div>
       </section>
 
