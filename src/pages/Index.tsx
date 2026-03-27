@@ -9,10 +9,18 @@ import { tutors } from "@/data/tutors";
 import { useAuth } from "@/contexts/AuthContext";
 import heroImg from "@/assets/hero-illustration.jpg";
 
-const subjects = [
-  "Mathematics", "English", "Danish", "Physics",
-  "Icelandic", "Chemistry", "Computer Science", "History",
+const categories = [
+  { name: "Mathematics", icon: Radical },
+  { name: "Driving", icon: Car },
+  { name: "Piano", icon: Piano },
+  { name: "Singing", icon: Mic },
+  { name: "Personal Training", icon: Dumbbell },
+  { name: "English", icon: MessageSquare },
+  { name: "Guitar", icon: Guitar },
+  { name: "Photography", icon: Camera },
 ];
+
+const subjects = categories.map((c) => c.name);
 
 const steps = [
   { icon: Search, title: "Search", desc: "Browse teachers by subject, location, and price." },
