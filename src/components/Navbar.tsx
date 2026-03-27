@@ -16,7 +16,7 @@ const Navbar = () => {
     }`;
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+    <nav className="sticky top-0 z-50 border-b border-border bg-steel text-white">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="text-2xl font-extrabold tracking-tight text-foreground">
           Kenna
