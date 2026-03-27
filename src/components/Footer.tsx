@@ -7,7 +7,7 @@ const Footer = () => {
         <div className="grid gap-8 md:grid-cols-4">
           <div>
             <h3 className="text-xl font-extrabold">Kenna</h3>
-            <p className="mt-2 text-sm text-cold">
+            <p className="mt-2 text-sm text-white/60">
               Iceland's marketplace for private tutoring.
             </p>
           </div>
