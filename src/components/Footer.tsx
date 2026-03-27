@@ -20,7 +20,7 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-cold">Company</h4>
+            <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-white/50">Company</h4>
             <ul className="space-y-2 text-sm">
               <li><a href="#" className="hover:underline">About</a></li>
               <li><a href="#" className="hover:underline">Contact</a></li>
