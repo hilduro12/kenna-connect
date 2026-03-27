@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Search, ShieldCheck, BookOpen, Monitor, Star, Users, MessageCircle, ArrowRight, Lock } from "lucide-react";
+import { Search, ShieldCheck, BookOpen, Monitor, Star, Users, MessageCircle, ArrowRight, Lock, Radical, Car, Piano, Mic, Dumbbell, MessageSquare, Guitar, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -9,10 +9,18 @@ import { tutors } from "@/data/tutors";
 import { useAuth } from "@/contexts/AuthContext";
 import heroImg from "@/assets/hero-illustration.jpg";
 
-const subjects = [
-  "Mathematics", "English", "Danish", "Physics",
-  "Icelandic", "Chemistry", "Computer Science", "History",
+const categories = [
+  { name: "Mathematics", icon: Radical },
+  { name: "Driving", icon: Car },
+  { name: "Piano", icon: Piano },
+  { name: "Singing", icon: Mic },
+  { name: "Personal Training", icon: Dumbbell },
+  { name: "English", icon: MessageSquare },
+  { name: "Guitar", icon: Guitar },
+  { name: "Photography", icon: Camera },
 ];
+
+const subjects = categories.map((c) => c.name);
 
 const steps = [
   { icon: Search, title: "Search", desc: "Browse teachers by subject, location, and price." },
@@ -86,10 +94,15 @@ const Index = () => {
       <section className="bg-light-bg py-16">
         <div className="container">
           <h2 className="text-center text-3xl font-bold text-foreground">Popular subjects</h2>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            {subjects.map((s) => (
-              <Link key={s} to={`/browse?subject=${encodeURIComponent(s)}`} className="rounded-full border border-border bg-background px-5 py-2.5 text-sm font-medium text-steel transition-colors hover:bg-primary hover:text-primary-foreground">
-                {s}
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-4">
+            {categories.map((cat) => (
+              <Link
+                key={cat.name}
+                to={`/browse?subject=${encodeURIComponent(cat.name)}`}
+                className="group flex flex-col items-center gap-3 rounded-xl border border-light-border bg-background px-4 py-6 text-center transition-all hover:shadow-md hover:-translate-y-0.5"
+              >
+                <cat.icon size={28} className="text-foreground" strokeWidth={1.5} />
+                <span className="text-sm font-medium text-steel group-hover:text-foreground transition-colors">{cat.name}</span>
               </Link>
             ))}
           </div>
