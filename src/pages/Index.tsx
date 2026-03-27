@@ -111,7 +111,7 @@ const Index = () => {
           </>
         ) : (
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-shadow">Discover 100+ teachers across Iceland</h2>
+            <h2 className="text-3xl font-bold text-foreground">Discover 100+ teachers across Iceland</h2>
             <p className="mt-2 text-steel">Subscribe to see full profiles, contact teachers, and book lessons</p>
             <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {tutors.slice(0, 4).map((tutor) => (
