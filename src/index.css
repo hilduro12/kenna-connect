@@ -15,7 +15,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 249 30% 18%;
 
-    --primary: 249 30% 18%;
+    --primary: 233 18% 35%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 317 5% 77%;
@@ -30,9 +30,9 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 317 5% 77%;
-    --input: 317 5% 77%;
-    --ring: 249 30% 18%;
+    --border: 226 6% 67%;
+    --input: 226 6% 67%;
+    --ring: 233 18% 35%;
 
     --radius: 0.625rem;
 
@@ -40,6 +40,7 @@
     --cold: 226 6% 67%;
     --light-bg: 317 5% 91%;
     --gold: 38 91% 55%;
+    --shadow: 305 6% 44%;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;

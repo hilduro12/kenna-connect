@@ -66,7 +66,7 @@ const Index = () => {
                 <Link
                   key={cat.name}
                   to={`/browse?subject=${encodeURIComponent(cat.name)}`}
-                  className="rounded-full border border-light-border bg-background px-4 py-1.5 text-sm font-medium text-steel transition-colors hover:bg-foreground hover:text-background hover:border-foreground"
+                  className="rounded-full bg-shadow px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-foreground"
                 >
                   {cat.name}
                 </Link>
@@ -81,7 +81,7 @@ const Index = () => {
 
       {/* How it works */}
       <section className="container py-16 md:py-20">
-        <h2 className="text-center text-3xl font-bold text-foreground">How it works</h2>
+        <h2 className="text-center text-3xl font-bold text-shadow">How it works</h2>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {steps.map((step, i) => (
             <div key={i} className="rounded-lg border border-border bg-card p-8 text-center shadow-sm">
@@ -101,7 +101,7 @@ const Index = () => {
         {isSubscribed ? (
           <>
             <div className="flex items-center justify-between">
-              <h2 className="text-3xl font-bold text-foreground">Featured teachers</h2>
+              <h2 className="text-3xl font-bold text-shadow">Featured teachers</h2>
               <Link to="/browse" className="flex items-center gap-1 text-sm font-medium text-steel hover:text-foreground">
                 View all <ArrowRight size={16} />
               </Link>
@@ -114,7 +114,7 @@ const Index = () => {
           </>
         ) : (
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-foreground">Discover 100+ teachers across Iceland</h2>
+            <h2 className="text-3xl font-bold text-shadow">Discover 100+ teachers across Iceland</h2>
             <p className="mt-2 text-steel">Subscribe to see full profiles, contact teachers, and book lessons</p>
             <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {tutors.slice(0, 4).map((tutor) => (
@@ -133,7 +133,7 @@ const Index = () => {
       {/* Why Kenna */}
       <section className="bg-light-bg py-16">
         <div className="container">
-          <h2 className="text-center text-3xl font-bold text-foreground">Why Kenna?</h2>
+          <h2 className="text-center text-3xl font-bold text-shadow">Why Kenna?</h2>
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {benefits.map((b, i) => (
               <div key={i} className="rounded-lg bg-background p-6 shadow-sm">
@@ -148,7 +148,7 @@ const Index = () => {
 
       {/* Testimonials */}
       <section className="container py-16 md:py-20">
-        <h2 className="text-center text-3xl font-bold text-foreground">What people say</h2>
+        <h2 className="text-center text-3xl font-bold text-shadow">What people say</h2>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {testimonials.map((t, i) => (
             <div key={i} className="rounded-lg border border-border bg-card p-6 shadow-sm">
