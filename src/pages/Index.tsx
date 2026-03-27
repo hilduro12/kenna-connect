@@ -58,7 +58,7 @@ const Index = () => {
                 {subjects.map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
               <Link to="/browse" className="bg-secondary-foreground">
-                <Button size="lg" className="gap-2"><Search size={18} /> Search</Button>
+                <Button size="lg" className="gap-2 bg-secondary-foreground"><Search size={18} /> Search</Button>
               </Link>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
