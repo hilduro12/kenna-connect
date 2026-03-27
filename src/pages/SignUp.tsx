@@ -1,121 +1,90 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { GraduationCap, BookOpen } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { X } from "lucide-react";
+import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
-type Role = null | "student" | "tutor";
-
 const SignUp = () => {
-  const [role, setRole] = useState<Role>(null);
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const { signup } = useAuth();
   const navigate = useNavigate();
 
-  if (role === null) {
-    return (
-      <div className="min-h-screen">
-        <Navbar />
-        <div className="container py-16">
-          <div className="mx-auto max-w-lg text-center">
-            <h1 className="text-3xl font-bold text-foreground">Join Kenna</h1>
-            <p className="mt-2 text-steel">How would you like to use Kenna?</p>
-
-            <div className="mt-10 grid gap-4 sm:grid-cols-2">
-              <button
-                onClick={() => setRole("student")}
-                className="group rounded-lg border-2 border-border bg-card p-8 text-center shadow-sm transition-all hover:border-primary hover:shadow-md"
-              >
-                <GraduationCap size={40} className="mx-auto text-primary" />
-                <h3 className="mt-4 text-lg font-semibold text-foreground">I want to find a teacher</h3>
-                <p className="mt-2 text-sm text-steel">Browse and connect with tutors across Iceland</p>
-              </button>
-              <button
-                onClick={() => navigate("/tutor-signup")}
-                className="group rounded-lg border-2 border-border bg-card p-8 text-center shadow-sm transition-all hover:border-primary hover:shadow-md"
-              >
-                <BookOpen size={40} className="mx-auto text-primary" />
-                <h3 className="mt-4 text-lg font-semibold text-foreground">I want to teach on Kenna</h3>
-                <p className="mt-2 text-sm text-steel">Create a profile and start reaching students</p>
-              </button>
-            </div>
-
-            <p className="mt-6 text-sm text-steel">
-              Already have an account?{" "}
-              <Link to="/login" className="font-medium text-primary hover:underline">Log in</Link>
-            </p>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleEmailSignup = (e: React.FormEvent) => {
     e.preventDefault();
-    signup({ name, email, password, role: role as "student" });
+    signup({ name: email.split("@")[0], email, password: "", role: "student" });
     navigate("/browse");
   };
 
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      <div className="container py-12">
-        <div className="mx-auto max-w-md">
-          <h1 className="text-3xl font-bold text-foreground text-center">Create your account</h1>
-          <p className="mt-2 text-center text-sm text-steel">
-            Subscribe and get full access to all teachers
-          </p>
+    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+      <div className="relative w-full max-w-sm">
+        {/* Close button */}
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute -top-2 left-0 flex h-9 w-9 items-center justify-center rounded-full text-steel transition-colors hover:bg-light-bg hover:text-foreground"
+          aria-label="Close"
+        >
+          <X size={20} />
+        </button>
 
-          <form onSubmit={handleSubmit} className="mt-8 rounded-lg border border-border bg-card p-6 shadow-sm space-y-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">Full name</label>
-              <input
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-lg border border-border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                placeholder="Your name"
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">Email</label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-lg border border-border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                placeholder="you@email.com"
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">Password</label>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-lg border border-border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                placeholder="••••••••"
-              />
-            </div>
-            <Button type="submit" className="w-full" size="lg">Sign Up & Subscribe</Button>
+        <div className="flex flex-col items-center pt-8">
+          {/* Logo */}
+          <Link to="/" className="text-3xl font-extrabold tracking-tight text-foreground">
+            Kenna
+          </Link>
+
+          {/* Heading */}
+          <h1 className="mt-8 text-2xl font-bold text-foreground">Sign up</h1>
+
+          {/* Form */}
+          <form onSubmit={handleEmailSignup} className="mt-8 w-full space-y-3">
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email address"
+              className="w-full rounded-full bg-light-bg px-5 py-3 text-sm text-foreground placeholder:text-cold outline-none focus:ring-2 focus:ring-primary"
+            />
+            <button
+              type="submit"
+              className="w-full rounded-full bg-foreground py-3 text-sm font-semibold text-background transition-opacity hover:opacity-90"
+            >
+              Sign up by email
+            </button>
           </form>
 
-          <button
-            onClick={() => setRole(null)}
-            className="mt-4 block w-full text-center text-sm text-steel hover:text-foreground"
-          >
-            ← Back to role selection
-          </button>
+          {/* Divider */}
+          <div className="my-6 flex w-full items-center gap-3">
+            <div className="h-px flex-1 bg-border" />
+            <span className="text-xs text-cold">or</span>
+            <div className="h-px flex-1 bg-border" />
+          </div>
+
+          {/* Social buttons */}
+          <div className="w-full space-y-3">
+            <button className="flex w-full items-center justify-center gap-3 rounded-full border border-light-border bg-background py-3 text-sm font-medium text-foreground transition-colors hover:bg-light-bg">
+              <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59a14.5 14.5 0 0 1 0-9.18l-7.98-6.19a24.01 24.01 0 0 0 0 21.56l7.98-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+              Sign up with Google
+            </button>
+            <button className="flex w-full items-center justify-center gap-3 rounded-full border border-light-border bg-background py-3 text-sm font-medium text-foreground transition-colors hover:bg-light-bg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.53-3.23 0-1.44.66-2.2.47-3.06-.4C3.79 16.17 4.36 9.02 8.9 8.75c1.26.06 2.14.72 2.88.76.97-.2 1.9-.87 3.09-.79 1.48.12 2.59.7 3.32 1.76-3.04 1.82-2.32 5.83.48 6.95-.57 1.5-1.31 2.99-2.62 4.85zM12.03 8.67c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+              Sign up with Apple
+            </button>
+          </div>
+
+          {/* Login link */}
+          <p className="mt-8 text-sm text-steel">
+            Already have an account?{" "}
+            <Link to="/login" className="font-bold text-foreground hover:underline">Log in</Link>
+          </p>
+
+          {/* Legal */}
+          <p className="mt-6 pb-8 text-xs text-cold">
+            By signing up, you agree to our{" "}
+            <a href="#" className="underline hover:text-steel">legal notices</a>
+          </p>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };
