@@ -165,12 +165,9 @@ const TutorProfile = () => {
                 <Clock size={12} />
                 Responds in {tutor.responseTime}
               </div>
-              <Button className="w-full gap-2" size="lg">
-                <Lock size={16} />
-                Subscribe to connect
-              </Button>
+              <RequestLessonDialog tutor={tutor} />
               <p className="text-center text-xs text-muted-foreground">
-                Subscribe from 2,900 ISK/month to contact tutors
+                No commitment — discuss details with the tutor first
               </p>
             </div>
           </aside>
