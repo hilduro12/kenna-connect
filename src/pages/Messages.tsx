@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Search, Send, Paperclip, ArrowLeft, BookOpen, User, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Navbar from "@/components/Navbar";
@@ -15,10 +14,7 @@ import {
   type Message,
 } from "@/data/conversations";
 
-type PreviewOption = "A" | "B" | "C";
-
 const Messages = () => {
-  const [previewOption, setPreviewOption] = useState<PreviewOption>("A");
   const [conversations, setConversations] = useState(initialConversations);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -125,7 +121,7 @@ const Messages = () => {
                     </div>
 
                     <div className="mt-0.5 flex items-center gap-2">
-                      <p className={`text-[13px] ${previewOption === "B" ? "truncate" : "line-clamp-2"} ${c.unread > 0 ? "font-medium text-foreground" : "text-muted-foreground"}`}>
+                      <p className={`text-[13px] line-clamp-2 ${c.unread > 0 ? "font-medium text-foreground" : "text-muted-foreground"}`}>
                         {c.lastMessage}
                       </p>
                       {c.unread > 0 && (
@@ -263,24 +259,6 @@ const Messages = () => {
     <div className="flex h-screen flex-col">
       <Navbar />
 
-      {/* Temporary toggle — remove after choosing */}
-      <div className="flex items-center gap-3 border-b border-border bg-muted/20 px-4 py-2">
-        <span className="text-xs font-medium text-muted-foreground">Preview layout:</span>
-        {(["A", "B", "C"] as PreviewOption[]).map((opt) => (
-          <button
-            key={opt}
-            onClick={() => setPreviewOption(opt)}
-            className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-              previewOption === opt
-                ? "bg-primary text-primary-foreground"
-                : "bg-background border border-border text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {opt === "A" ? "A — 2-line, narrow" : opt === "B" ? "B — 1-line, wide" : "C — 2-line, wide"}
-          </button>
-        ))}
-      </div>
-
       <div className="flex flex-1 overflow-hidden">
         {/* Mobile: show list or chat */}
         <div className={`w-full md:hidden ${mobileShowChat ? "hidden" : "block"}`}>
@@ -292,7 +270,7 @@ const Messages = () => {
 
         {/* Desktop: side-by-side */}
         <div className="hidden md:flex md:flex-1">
-          <div className={`shrink-0 ${previewOption === "A" ? "w-[340px] lg:w-[380px]" : "w-[400px] lg:w-[440px]"}`}>
+          <div className="shrink-0 w-[340px] lg:w-[380px]">
             <InboxList />
           </div>
           <div className="flex-1">
