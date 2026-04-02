@@ -1,18 +1,25 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 
-interface User {
+export interface User {
   id: string;
   name: string;
   email: string;
   role: "student" | "parent" | "tutor";
+  /** Roles this user has been granted (e.g. ["tutor"] or ["student","tutor"]) */
+  roles: string[];
+  /** Whether the user has an active student subscription */
   subscribed: boolean;
 }
 
 interface AuthContextType {
   user: User | null;
+  /** True if user has an active student subscription (or preview is on) */
   isSubscribed: boolean;
+  /** True if user can browse as a student (has student role + subscription) */
+  hasStudentAccess: boolean;
   previewLoggedIn: boolean;
   togglePreview: () => void;
+  /** Switch the active role between tutor ↔ student (for dual-role users) */
   toggleRole: () => void;
   login: (email: string, password: string) => void;
   logout: () => void;
@@ -28,6 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const [previewLoggedIn, setPreviewLoggedIn] = useState(false);
+
   const togglePreview = () => {
     setPreviewLoggedIn((v) => {
       const next = !v;
@@ -37,6 +45,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           name: "Demo User",
           email: "demo@kenna.is",
           role: "student",
+          roles: ["student"],
           subscribed: true,
         };
         setUser(previewUser);
@@ -50,8 +59,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const isSubscribed = (user?.subscribed ?? false) || previewLoggedIn;
 
+  /* A user has student access only if they have the student role AND an active subscription.
+     Tutor-only users see blurred tutor cards (same as logged-out). */
+  const hasStudentAccess =
+    isSubscribed && (user?.roles?.includes("student") || user?.roles?.includes("parent") || false);
+
   const toggleRole = () => {
     if (!user) return;
+    // Only allow toggling if user has multiple roles
+    if (user.roles.length <= 1) return;
     const newRole = user.role === "tutor" ? "student" : "tutor";
     const updated = { ...user, role: newRole as User["role"] };
     setUser(updated);
@@ -59,11 +75,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const login = (email: string, _password: string) => {
+    // In production: call Supabase auth, retrieve user profile + roles
+    // Mock: create a student user. The real system would look up the user's role.
     const mockUser: User = {
       id: "1",
       name: "Demo User",
       email,
       role: "student",
+      roles: ["student"],
       subscribed: true,
     };
     setUser(mockUser);
@@ -76,7 +95,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       name: data.name,
       email: data.email,
       role: data.role,
-      subscribed: true,
+      roles: [data.role],
+      subscribed: false, // New students start unsubscribed
     };
     setUser(newUser);
     localStorage.setItem("kenna_user", JSON.stringify(newUser));
@@ -84,11 +104,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     setUser(null);
+    setPreviewLoggedIn(false);
     localStorage.removeItem("kenna_user");
   };
 
   return (
-    <AuthContext.Provider value={{ user, isSubscribed, previewLoggedIn, togglePreview, toggleRole, login, logout, signup }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isSubscribed,
+        hasStudentAccess,
+        previewLoggedIn,
+        togglePreview,
+        toggleRole,
+        login,
+        logout,
+        signup,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

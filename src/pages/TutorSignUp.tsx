@@ -1,23 +1,76 @@
 import { useState } from "react";
-import { Check, ChevronRight, Upload, Mail, Clock, UserCheck, ArrowRight } from "lucide-react";
+import {
+  Check, ChevronRight, Upload, Mail, Clock, UserCheck, ArrowRight,
+  FileText, ShieldCheck, Send, AlertCircle,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const allSubjects = ["Mathematics", "English", "Danish", "Physics", "Icelandic", "Chemistry", "Computer Science", "History"];
+const allSubjects = [
+  "Mathematics", "English", "Danish", "Physics",
+  "Icelandic", "Chemistry", "Computer Science", "History",
+];
+
+const locations = [
+  "Reykjavík", "Kópavogur", "Hafnarfjörður", "Garðabær",
+  "Mosfellsbær", "Reykjanesbær", "Akureyri", "Selfoss", "Akranes", "Online",
+];
+
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-const benefits = [
-  "Free to join",
-  "Set your own rates",
-  "Teach online or in-person",
-  "Get discovered by students",
+/* ── Shared input style ── */
+const inputClass =
+  "w-full rounded-lg border border-border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary";
+
+/* ── Application timeline shown in sidebar ── */
+const timelineSteps = [
+  { icon: Send, label: "Submit application", desc: "Fill in your details and submit" },
+  { icon: ShieldCheck, label: "Identity verification", desc: "We verify your identity via kennitala" },
+  { icon: UserCheck, label: "Profile review", desc: "Our team reviews your qualifications" },
+  { icon: Mail, label: "Receive login", desc: "Get an email with your login credentials" },
 ];
 
 const TutorSignUp = () => {
   const [step, setStep] = useState(1);
   const totalSteps = 4;
+
+  /* ── Form state ── */
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [kennitala, setKennitala] = useState("");
+  const [location, setLocation] = useState("");
+  const [subjects, setSubjects] = useState<string[]>([]);
+  const [rate, setRate] = useState("");
+  const [bio, setBio] = useState("");
+  const [experience, setExperience] = useState("");
+  const [education, setEducation] = useState("");
+  const [availability, setAvailability] = useState<Record<string, boolean>>({});
+
+  const toggleSubject = (s: string) =>
+    setSubjects((prev) => (prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]));
+
+  const toggleSlot = (key: string) =>
+    setAvailability((prev) => ({ ...prev, [key]: !prev[key] }));
+
+  /* ── Validation ── */
+  const step1Valid = name.trim() && email.trim() && phone.trim() && kennitala.trim() && location;
+  const step2Valid = subjects.length > 0 && rate && bio.trim();
+  const step3Valid = Object.values(availability).some(Boolean);
+
+  const handleSubmit = () => {
+    // In production: POST to Supabase / API, send you an email notification
+    console.log("Application submitted:", {
+      name, email, phone, kennitala, location,
+      subjects, rate, bio, experience, education,
+      availability,
+      status: "pending_review",
+      submittedAt: new Date().toISOString(),
+    });
+    setStep(5);
+  };
 
   return (
     <div className="min-h-screen">
@@ -25,11 +78,17 @@ const TutorSignUp = () => {
 
       <div className="container py-12">
         <div className="mx-auto max-w-4xl">
+
+          {/* ── Header + Progress (hidden on success) ── */}
           {step <= totalSteps && (
             <>
               <div className="text-center">
-                <h1 className="text-3xl font-bold text-foreground md:text-4xl">Start teaching on Kenna</h1>
-                <p className="mt-2 text-steel">It's free to create a profile. Reach students across Iceland.</p>
+                <h1 className="text-3xl font-bold text-foreground md:text-4xl">
+                  Apply to teach on Kenna
+                </h1>
+                <p className="mt-2 text-steel">
+                  This is an application — not a sign-up. Once approved, you'll receive login credentials by email.
+                </p>
               </div>
 
               {/* Progress */}
@@ -38,13 +97,19 @@ const TutorSignUp = () => {
                   <div key={s} className="flex items-center">
                     <div
                       className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold ${
-                        s <= step ? "bg-primary text-primary-foreground" : "bg-light-bg text-cold"
+                        s <= step
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-light-bg text-cold"
                       }`}
                     >
                       {s < step ? <Check size={16} /> : s}
                     </div>
                     {s < totalSteps && (
-                      <div className={`mx-2 h-0.5 w-8 sm:w-12 ${s < step ? "bg-primary" : "bg-border"}`} />
+                      <div
+                        className={`mx-2 h-0.5 w-8 sm:w-12 ${
+                          s < step ? "bg-primary" : "bg-border"
+                        }`}
+                      />
                     )}
                   </div>
                 ))}
@@ -52,46 +117,69 @@ const TutorSignUp = () => {
             </>
           )}
 
+          {/* ══════════════════════════════════════════ */}
+          {/* SUCCESS PAGE                              */}
+          {/* ══════════════════════════════════════════ */}
           {step === 5 ? (
-            /* ── Success / Confirmation ── */
             <div className="mx-auto mt-10 max-w-lg text-center">
               <div className="rounded-xl border border-border bg-card p-8 shadow-sm md:p-10">
                 <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
                   <Check size={40} className="text-green-600" />
                 </div>
-                <h2 className="mt-6 text-2xl font-bold text-foreground">Profile submitted!</h2>
+                <h2 className="mt-6 text-2xl font-bold text-foreground">
+                  Application received!
+                </h2>
                 <p className="mt-3 text-steel">
-                  Thank you for applying to teach on Kenna. Our team will review your profile and get back to you shortly.
+                  Thank you for applying to teach on Kenna. We'll review your application and verify your identity. You'll receive an email with your login credentials once approved.
                 </p>
 
                 {/* What happens next */}
                 <div className="mt-8 space-y-4 text-left">
-                  <h3 className="text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground">What happens next</h3>
+                  <h3 className="text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                    What happens next
+                  </h3>
                   <div className="flex items-start gap-4 rounded-lg border border-border bg-light-bg p-4">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100">
-                      <UserCheck size={20} className="text-blue-600" />
+                      <ShieldCheck size={20} className="text-blue-600" />
                     </div>
                     <div>
-                      <p className="font-semibold text-foreground">Profile review</p>
-                      <p className="mt-0.5 text-sm text-steel">Our team reviews your profile to ensure quality for students and parents.</p>
+                      <p className="font-semibold text-foreground">Identity verification</p>
+                      <p className="mt-0.5 text-sm text-steel">
+                        We verify your kennitala and credentials to ensure trust and safety.
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4 rounded-lg border border-border bg-light-bg p-4">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-green-100">
-                      <Mail size={20} className="text-green-600" />
+                      <UserCheck size={20} className="text-green-600" />
                     </div>
                     <div>
-                      <p className="font-semibold text-foreground">Email confirmation</p>
-                      <p className="mt-0.5 text-sm text-steel">You'll receive an email once your profile is approved and live on Kenna.</p>
+                      <p className="font-semibold text-foreground">Application review</p>
+                      <p className="mt-0.5 text-sm text-steel">
+                        Our team reviews your profile, qualifications, and teaching experience.
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4 rounded-lg border border-border bg-light-bg p-4">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-purple-100">
-                      <Clock size={20} className="text-purple-600" />
+                      <Mail size={20} className="text-purple-600" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground">Login credentials sent</p>
+                      <p className="mt-0.5 text-sm text-steel">
+                        Once approved, you'll receive an email with a link to set your password and log in.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4 rounded-lg border border-border bg-light-bg p-4">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-100">
+                      <Clock size={20} className="text-amber-600" />
                     </div>
                     <div>
                       <p className="font-semibold text-foreground">Typical timeline</p>
-                      <p className="mt-0.5 text-sm text-steel">Most profiles are reviewed within 1–2 business days.</p>
+                      <p className="mt-0.5 text-sm text-steel">
+                        Most applications are reviewed within 1–2 business days.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -109,36 +197,84 @@ const TutorSignUp = () => {
               </div>
             </div>
           ) : (
+
+          /* ══════════════════════════════════════════ */
+          /* FORM + SIDEBAR                            */
+          /* ══════════════════════════════════════════ */
           <div className="mt-10 flex flex-col gap-8 lg:flex-row">
-            {/* Form */}
+            {/* ── Form card ── */}
             <div className="flex-1 rounded-lg border border-border bg-card p-6 shadow-sm">
+
+              {/* ── Step 1: Personal info + identity ── */}
               {step === 1 && (
                 <div className="space-y-5">
                   <h2 className="text-xl font-semibold text-foreground">Personal information</h2>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div>
-                      <label className="mb-1 block text-sm font-medium text-foreground">Full name</label>
-                      <input className="w-full rounded-lg border border-border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Your name" />
+                      <label className="mb-1 block text-sm font-medium text-foreground">Full name *</label>
+                      <input
+                        className={inputClass}
+                        placeholder="Your full name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
                     </div>
                     <div>
-                      <label className="mb-1 block text-sm font-medium text-foreground">Email</label>
-                      <input type="email" className="w-full rounded-lg border border-border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="you@email.com" />
+                      <label className="mb-1 block text-sm font-medium text-foreground">Email *</label>
+                      <input
+                        type="email"
+                        className={inputClass}
+                        placeholder="you@email.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
                     </div>
                     <div>
-                      <label className="mb-1 block text-sm font-medium text-foreground">Phone</label>
-                      <input className="w-full rounded-lg border border-border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="+354 ..." />
+                      <label className="mb-1 block text-sm font-medium text-foreground">Phone *</label>
+                      <input
+                        className={inputClass}
+                        placeholder="+354 ..."
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                      />
                     </div>
                     <div>
-                      <label className="mb-1 block text-sm font-medium text-foreground">Location</label>
-                      <select className="w-full rounded-lg border border-border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
-                        <option>Reykjavik</option>
-                        <option>Kopavogur</option>
-                        <option>Hafnarfjordur</option>
-                        <option>Akureyri</option>
-                        <option>Online</option>
+                      <label className="mb-1 block text-sm font-medium text-foreground">Location *</label>
+                      <select
+                        className={inputClass}
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                      >
+                        <option value="">Select location...</option>
+                        {locations.map((l) => (
+                          <option key={l} value={l}>{l}</option>
+                        ))}
                       </select>
                     </div>
                   </div>
+
+                  {/* Kennitala */}
+                  <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+                    <div className="flex items-start gap-3">
+                      <ShieldCheck size={20} className="mt-0.5 shrink-0 text-blue-600" />
+                      <div className="flex-1">
+                        <label className="block text-sm font-semibold text-foreground">
+                          Kennitala (national ID) *
+                        </label>
+                        <p className="mt-0.5 text-xs text-steel">
+                          Required for identity verification. Your kennitala is stored securely and never shared publicly.
+                        </p>
+                        <input
+                          className={`${inputClass} mt-2 bg-white`}
+                          placeholder="000000-0000"
+                          value={kennitala}
+                          onChange={(e) => setKennitala(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Profile photo */}
                   <div>
                     <label className="mb-1 block text-sm font-medium text-foreground">Profile photo</label>
                     <div className="flex h-32 cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-border hover:border-primary">
@@ -151,97 +287,237 @@ const TutorSignUp = () => {
                 </div>
               )}
 
+              {/* ── Step 2: Teaching details ── */}
               {step === 2 && (
                 <div className="space-y-5">
                   <h2 className="text-xl font-semibold text-foreground">Teaching details</h2>
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-foreground">Subjects (select all that apply)</label>
+                    <label className="mb-1 block text-sm font-medium text-foreground">
+                      Subjects you teach * <span className="text-xs text-cold">(select all that apply)</span>
+                    </label>
                     <div className="flex flex-wrap gap-2">
                       {allSubjects.map((s) => (
-                        <label key={s} className="flex cursor-pointer items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm text-steel transition hover:bg-light-bg">
-                          <input type="checkbox" className="accent-primary" />
+                        <button
+                          key={s}
+                          type="button"
+                          onClick={() => toggleSubject(s)}
+                          className={`rounded-full border px-3 py-1.5 text-sm transition ${
+                            subjects.includes(s)
+                              ? "border-primary bg-primary/10 font-medium text-primary"
+                              : "border-border text-steel hover:bg-light-bg"
+                          }`}
+                        >
+                          {subjects.includes(s) && <Check size={14} className="mr-1 inline" />}
                           {s}
-                        </label>
+                        </button>
                       ))}
                     </div>
                   </div>
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-foreground">Hourly rate (ISK)</label>
-                    <input type="number" className="w-full rounded-lg border border-border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="6000" />
+                    <label className="mb-1 block text-sm font-medium text-foreground">Hourly rate (ISK) *</label>
+                    <input
+                      type="number"
+                      className={inputClass}
+                      placeholder="e.g. 6000"
+                      value={rate}
+                      onChange={(e) => setRate(e.target.value)}
+                    />
                   </div>
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-foreground">About you</label>
-                    <textarea rows={4} className="w-full rounded-lg border border-border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Tell students about your experience and teaching style..." />
+                    <label className="mb-1 block text-sm font-medium text-foreground">About you *</label>
+                    <textarea
+                      rows={4}
+                      className={inputClass}
+                      placeholder="Tell students about your teaching approach, background, and what makes you a great teacher..."
+                      value={bio}
+                      onChange={(e) => setBio(e.target.value)}
+                    />
                   </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-foreground">Experience (years)</label>
-                    <input type="number" className="w-full rounded-lg border border-border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="3" />
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                      <label className="mb-1 block text-sm font-medium text-foreground">Teaching experience (years)</label>
+                      <input
+                        type="number"
+                        className={inputClass}
+                        placeholder="e.g. 3"
+                        value={experience}
+                        onChange={(e) => setExperience(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-sm font-medium text-foreground">Education / qualifications</label>
+                      <input
+                        className={inputClass}
+                        placeholder="e.g. BSc in Mathematics"
+                        value={education}
+                        onChange={(e) => setEducation(e.target.value)}
+                      />
+                    </div>
                   </div>
                 </div>
               )}
 
+              {/* ── Step 3: Availability ── */}
               {step === 3 && (
                 <div className="space-y-5">
                   <h2 className="text-xl font-semibold text-foreground">Availability</h2>
-                  <p className="text-sm text-steel">Select when you're generally available to teach.</p>
+                  <p className="text-sm text-steel">
+                    Select when you're generally available to teach. You can update this later.
+                  </p>
                   <div className="grid grid-cols-7 gap-2">
                     {days.map((day) => (
                       <div key={day} className="text-center">
                         <p className="mb-2 text-xs font-semibold text-foreground">{day}</p>
-                        {["Morning", "Afternoon", "Evening"].map((time) => (
-                          <label key={time} className="mb-1 flex cursor-pointer items-center justify-center rounded border border-border px-1 py-2 text-xs text-steel transition hover:bg-light-bg">
-                            <input type="checkbox" className="sr-only" />
-                            {time.slice(0, 3)}
-                          </label>
-                        ))}
+                        {["Morning", "Afternoon", "Evening"].map((time) => {
+                          const key = `${day}-${time}`;
+                          const active = availability[key] || false;
+                          return (
+                            <button
+                              key={time}
+                              type="button"
+                              onClick={() => toggleSlot(key)}
+                              className={`mb-1 flex w-full cursor-pointer items-center justify-center rounded border px-1 py-2 text-xs transition ${
+                                active
+                                  ? "border-primary bg-primary/10 font-medium text-primary"
+                                  : "border-border text-steel hover:bg-light-bg"
+                              }`}
+                            >
+                              {time.slice(0, 3)}
+                            </button>
+                          );
+                        })}
                       </div>
                     ))}
                   </div>
                 </div>
               )}
 
+              {/* ── Step 4: Review & submit ── */}
               {step === 4 && (
-                <div className="space-y-5 text-center">
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                    <Check size={32} />
-                  </div>
-                  <h2 className="text-xl font-semibold text-foreground">Review & submit</h2>
-                  <p className="text-steel">
-                    Review your information above, then submit your profile for approval. You'll be notified by email once your profile is live.
+                <div className="space-y-6">
+                  <h2 className="text-xl font-semibold text-foreground">Review your application</h2>
+                  <p className="text-sm text-steel">
+                    Please review the details below. Once submitted, our team will review your application and contact you by email.
                   </p>
+
+                  {/* Summary */}
+                  <div className="space-y-4 rounded-lg border border-border bg-light-bg p-5">
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div>
+                        <p className="text-xs font-semibold uppercase text-cold">Name</p>
+                        <p className="text-sm text-foreground">{name || "—"}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase text-cold">Email</p>
+                        <p className="text-sm text-foreground">{email || "—"}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase text-cold">Phone</p>
+                        <p className="text-sm text-foreground">{phone || "—"}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase text-cold">Location</p>
+                        <p className="text-sm text-foreground">{location || "—"}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase text-cold">Kennitala</p>
+                        <p className="text-sm text-foreground">{kennitala ? "••••••-" + kennitala.slice(-4) : "—"}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase text-cold">Hourly rate</p>
+                        <p className="text-sm text-foreground">{rate ? `${Number(rate).toLocaleString()} ISK` : "—"}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase text-cold">Subjects</p>
+                      <div className="mt-1 flex flex-wrap gap-1.5">
+                        {subjects.length > 0
+                          ? subjects.map((s) => (
+                              <span key={s} className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                                {s}
+                              </span>
+                            ))
+                          : <span className="text-sm text-steel">—</span>}
+                      </div>
+                    </div>
+                    {bio && (
+                      <div>
+                        <p className="text-xs font-semibold uppercase text-cold">About</p>
+                        <p className="mt-0.5 text-sm text-steel">{bio}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Reminder */}
+                  <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4">
+                    <AlertCircle size={20} className="mt-0.5 shrink-0 text-amber-600" />
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">This is an application, not a sign-up</p>
+                      <p className="mt-0.5 text-xs text-steel">
+                        Your application will be reviewed by our team. Once approved, you'll receive an email with a link to set your password and access your teacher dashboard. Typical review time is 1–2 business days.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               )}
 
-              {step <= totalSteps && (
-                <div className="mt-8 flex justify-between">
-                  {step > 1 ? (
-                    <Button variant="outline" onClick={() => setStep(step - 1)}>
-                      Back
-                    </Button>
-                  ) : <div />}
-                  {step < totalSteps ? (
-                    <Button onClick={() => setStep(step + 1)} className="gap-1">
-                      Next <ChevronRight size={16} />
-                    </Button>
-                  ) : (
-                    <Button onClick={() => setStep(5)}>Submit Profile</Button>
-                  )}
-                </div>
-              )}
+              {/* ── Navigation buttons ── */}
+              <div className="mt-8 flex justify-between">
+                {step > 1 ? (
+                  <Button variant="outline" onClick={() => setStep(step - 1)}>
+                    Back
+                  </Button>
+                ) : (
+                  <div />
+                )}
+                {step < totalSteps ? (
+                  <Button
+                    onClick={() => setStep(step + 1)}
+                    className="gap-1"
+                    disabled={
+                      (step === 1 && !step1Valid) ||
+                      (step === 2 && !step2Valid) ||
+                      (step === 3 && !step3Valid)
+                    }
+                  >
+                    Next <ChevronRight size={16} />
+                  </Button>
+                ) : (
+                  <Button onClick={handleSubmit} className="gap-1.5">
+                    <Send size={16} /> Submit Application
+                  </Button>
+                )}
+              </div>
             </div>
 
-            {/* Benefits sidebar */}
+            {/* ── Sidebar: Application process ── */}
             <aside className="lg:w-72">
               <div className="rounded-lg border border-border bg-light-bg p-6">
-                <h3 className="text-lg font-semibold text-foreground">Why teach on Kenna?</h3>
-                <ul className="mt-4 space-y-3">
-                  {benefits.map((b) => (
-                    <li key={b} className="flex items-start gap-2 text-sm text-steel">
-                      <Check size={16} className="mt-0.5 shrink-0 text-primary" />
-                      {b}
+                <h3 className="text-lg font-semibold text-foreground">How it works</h3>
+                <p className="mt-1 text-xs text-steel">Application process</p>
+                <ol className="mt-5 space-y-5">
+                  {timelineSteps.map((t, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white shadow-sm">
+                        <t.icon size={16} className="text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">{t.label}</p>
+                        <p className="mt-0.5 text-xs text-steel">{t.desc}</p>
+                      </div>
                     </li>
                   ))}
-                </ul>
+                </ol>
+              </div>
+
+              {/* Note */}
+              <div className="mt-4 rounded-lg border border-border bg-card p-4">
+                <div className="flex items-start gap-2">
+                  <FileText size={16} className="mt-0.5 shrink-0 text-cold" />
+                  <p className="text-xs text-steel">
+                    It's free to apply. Kenna does not charge teachers a signup fee. You set your own rates and keep your earnings.
+                  </p>
+                </div>
               </div>
             </aside>
           </div>

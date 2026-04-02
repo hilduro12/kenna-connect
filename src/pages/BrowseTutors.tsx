@@ -18,7 +18,7 @@ const sortOptions = [
 ];
 
 const BrowseTutors = () => {
-  const { isSubscribed } = useAuth();
+  const { hasStudentAccess } = useAuth();
   const [searchParams] = useSearchParams();
   const initialSubject = searchParams.get("subject") || "All Subjects";
   const [subject, setSubject] = useState(initialSubject);
@@ -112,7 +112,7 @@ const BrowseTutors = () => {
             ) : (
               <div className="grid gap-5 sm:grid-cols-2">
                 {filtered.map((tutor) =>
-                  isSubscribed ? (
+                  hasStudentAccess ? (
                     <TutorCard key={tutor.id} tutor={tutor} />
                   ) : (
                     <BlurredTutorCard key={tutor.id} tutor={tutor} />

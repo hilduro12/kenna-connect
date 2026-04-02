@@ -12,6 +12,9 @@ const Login = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     login(email, password);
+    // In production: after auth, check user.role from the DB and route accordingly
+    // For now the mock always creates a student, so we go to /dashboard
+    // A tutor would go to /tutor-dashboard
     navigate("/dashboard");
   };
 

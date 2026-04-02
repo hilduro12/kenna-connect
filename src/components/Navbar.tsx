@@ -47,7 +47,7 @@ const Navbar = () => {
               <Link to="/browse" className={linkClass("/browse")}>Browse</Link>
               <Link to="/pricing" className={linkClass("/pricing")}>Pricing</Link>
               <div className="h-5 w-px bg-white/20" />
-              <Link to="/tutor-signup" className={linkClass("/tutor-signup")}>For Teachers</Link>
+              <Link to="/tutor-signup" className={linkClass("/tutor-signup")}>Start Teaching</Link>
             </>
           )}
         </div>
@@ -109,7 +109,7 @@ const Navbar = () => {
               <>
                 <Link to="/browse" onClick={() => setOpen(false)} className={mobileLinkClass}>Browse</Link>
                 <Link to="/pricing" onClick={() => setOpen(false)} className={mobileLinkClass}>Pricing</Link>
-                <Link to="/tutor-signup" onClick={() => setOpen(false)} className={mobileLinkClass}>For Teachers</Link>
+                <Link to="/tutor-signup" onClick={() => setOpen(false)} className={mobileLinkClass}>Start Teaching</Link>
                 <hr className="border-white/10" />
                 <Link to="/login" onClick={() => setOpen(false)}>
                   <Button variant="ghost" size="sm" className="w-full text-white/70 hover:text-white hover:bg-white/10">Log In</Button>

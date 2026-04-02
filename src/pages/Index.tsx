@@ -84,7 +84,7 @@ const HeroJourneyPath = () => (
 /* ── Main component ── */
 
 const Index = () => {
-  const { isSubscribed } = useAuth();
+  const { hasStudentAccess } = useAuth();
   const [selectedSubject, setSelectedSubject] = useState("");
 
   return (
@@ -154,7 +154,7 @@ const Index = () => {
 
       {/* Featured teachers */}
       <section className="container py-10 md:py-12">
-        {isSubscribed ? (
+        {hasStudentAccess ? (
           <>
             <div className="flex items-center justify-between">
               <h2 className="text-3xl font-bold text-foreground">Featured teachers</h2>
@@ -215,7 +215,7 @@ const Index = () => {
               <Button variant="secondary" size="lg">Subscribe Now</Button>
             </Link>
             <Link to="/tutor-signup">
-              <Button variant="secondary" size="lg">Become a Teacher</Button>
+              <Button variant="secondary" size="lg">Start Teaching</Button>
             </Link>
           </div>
         </div>
