@@ -35,7 +35,7 @@ const inputClass =
 /* ── Application timeline shown in sidebar ── */
 const timelineSteps = [
   { icon: Send, label: "Submit application", desc: "Fill in your details and submit" },
-  { icon: ShieldCheck, label: "Identity verification", desc: "We verify your identity via kennitala" },
+  { icon: ShieldCheck, label: "Identity verification", desc: "We verify your identity and credentials" },
   { icon: UserCheck, label: "Profile review", desc: "Our team reviews your qualifications" },
   { icon: Mail, label: "Receive login", desc: "Get an email with your login credentials" },
 ];
@@ -48,7 +48,6 @@ const TutorSignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [kennitala, setKennitala] = useState("");
   const [location, setLocation] = useState("");
   const [subjects, setSubjects] = useState<string[]>([]);
   const [rate, setRate] = useState("");
@@ -65,13 +64,13 @@ const TutorSignUp = () => {
     setAvailability((prev) => (prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]));
 
   /* ── Validation ── */
-  const step1Valid = name.trim() && email.trim() && phone.trim() && kennitala.trim() && location;
+  const step1Valid = name.trim() && email.trim() && phone.trim() && location;
   const step2Valid = subjects.length > 0 && rate && bio.trim() && availability.length > 0 && teachingFormat;
 
   const handleSubmit = () => {
     // In production: POST to Supabase / API, send admin notification email
     console.log("Application submitted:", {
-      name, email, phone, kennitala, location,
+      name, email, phone, location,
       subjects, rate, bio, experience, education,
       availability, teachingFormat,
       status: "pending_review",
@@ -245,26 +244,6 @@ const TutorSignUp = () => {
                     </div>
                   </div>
 
-                  {/* Kennitala */}
-                  <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-                    <div className="flex items-start gap-3">
-                      <ShieldCheck size={20} className="mt-0.5 shrink-0 text-blue-600" />
-                      <div className="flex-1">
-                        <label className="block text-sm font-semibold text-foreground">
-                          Kennitala (national ID) *
-                        </label>
-                        <p className="mt-0.5 text-xs text-steel">
-                          Required for identity verification. Stored securely and never shared publicly.
-                        </p>
-                        <input
-                          className={`${inputClass} mt-2 bg-white`}
-                          placeholder="000000-0000"
-                          value={kennitala}
-                          onChange={(e) => setKennitala(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                  </div>
                 </div>
               )}
 
@@ -412,10 +391,6 @@ const TutorSignUp = () => {
                       <div>
                         <p className="text-xs font-semibold uppercase text-cold">Location</p>
                         <p className="text-sm text-foreground">{location || "—"}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-semibold uppercase text-cold">Kennitala</p>
-                        <p className="text-sm text-foreground">{kennitala ? "••••••-" + kennitala.slice(-4) : "—"}</p>
                       </div>
                       <div>
                         <p className="text-xs font-semibold uppercase text-cold">Hourly rate</p>
