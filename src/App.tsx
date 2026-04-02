@@ -16,6 +16,7 @@ import Dashboard from "./pages/Dashboard";
 import TutorDashboard from "./pages/TutorDashboard";
 import NotFound from "./pages/NotFound";
 import Messages from "./pages/Messages";
+import Bookings from "./pages/Bookings";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/messages" element={<Messages />} />
+            <Route path="/bookings" element={<Bookings />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
