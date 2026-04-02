@@ -12,15 +12,10 @@ import {
   Clock,
   Video,
   Users,
-  BookOpen,
   Plus,
-  X,
-  ChevronDown,
   Pause,
   ExternalLink,
   Info,
-  DollarSign,
-  Calendar,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -86,28 +81,13 @@ const ChipSelector = ({
   </div>
 );
 
-/* ─── Availability day row ─── */
-const DayRow = ({
-  day,
-  slots,
-  enabled,
-  onToggle,
-}: {
-  day: string;
-  slots: string;
-  enabled: boolean;
-  onToggle: () => void;
-}) => (
-  <div className="flex items-center justify-between py-2.5">
-    <div className="flex items-center gap-3">
-      <Switch checked={enabled} onCheckedChange={onToggle} />
-      <span className={`text-sm font-medium ${enabled ? "text-foreground" : "text-muted-foreground"}`}>
-        {day}
-      </span>
-    </div>
-    {enabled && <span className="text-xs text-muted-foreground">{slots}</span>}
-  </div>
-);
+const availabilityOptions = [
+  "Weekday mornings",
+  "Weekday afternoons",
+  "Weekday evenings",
+  "Weekends",
+  "Flexible",
+];
 
 /* ─── Verification status row ─── */
 const VerifyRow = ({
@@ -163,9 +143,7 @@ const TutorProfileEdit = () => {
   const [specializations, setSpecializations] = useState(["Exam preparation", "Weekly tutoring"]);
   const [teachOnline, setTeachOnline] = useState(true);
   const [teachInPerson, setTeachInPerson] = useState(true);
-  const [availability, setAvailability] = useState({
-    Mon: true, Tue: true, Wed: true, Thu: true, Fri: true, Sat: false, Sun: false,
-  });
+  const [availability, setAvailability] = useState(["Weekday afternoons", "Weekday evenings"]);
 
   const completeness = 82;
 
@@ -273,7 +251,7 @@ const TutorProfileEdit = () => {
                   <Info className="mt-0.5 h-3 w-3 shrink-0" />
                   <span>
                     Describe your teaching style, experience, and what kinds of students you work best with.
-                    Parents want to feel confident they're choosing the right tutor.
+                    Parents want to feel confident they're choosing the right teacher.
                   </span>
                 </div>
               </Section>
@@ -349,26 +327,17 @@ const TutorProfileEdit = () => {
               {/* 5 — Availability */}
               <Section
                 title="Availability"
-                description="Let students know when you're generally available."
+                description="Let students know when you're generally available. You can discuss exact times through messages."
               >
-                <div className="divide-y divide-border">
-                  {(Object.keys(availability) as (keyof typeof availability)[]).map((day) => (
-                    <DayRow
-                      key={day}
-                      day={
-                        { Mon: "Monday", Tue: "Tuesday", Wed: "Wednesday", Thu: "Thursday", Fri: "Friday", Sat: "Saturday", Sun: "Sunday" }[day]
-                      }
-                      slots={
-                        { Mon: "15:00 – 20:00", Tue: "15:00 – 20:00", Wed: "14:00 – 19:00", Thu: "15:00 – 20:00", Fri: "14:00 – 18:00", Sat: "10:00 – 14:00", Sun: "—" }[day]
-                      }
-                      enabled={availability[day]}
-                      onToggle={() => setAvailability((a) => ({ ...a, [day]: !a[day] }))}
-                    />
-                  ))}
-                </div>
-                <p className="mt-3 text-[11px] text-muted-foreground">
-                  You can discuss exact times with students through messages.
-                </p>
+                <ChipSelector
+                  items={availabilityOptions}
+                  selected={availability}
+                  onToggle={(item) =>
+                    setAvailability((a) =>
+                      a.includes(item) ? a.filter((i) => i !== item) : [...a, item]
+                    )
+                  }
+                />
               </Section>
 
               {/* 6 — Education & qualifications */}
@@ -501,7 +470,7 @@ const TutorProfileEdit = () => {
                         <BadgeCheck className="h-4 w-4 text-emerald-500" />
                       </div>
                       <p className="truncate text-xs text-muted-foreground">
-                        Experienced math & science tutor
+                        Experienced math & science teacher
                       </p>
                     </div>
                   </div>

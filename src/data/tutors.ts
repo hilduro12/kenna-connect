@@ -20,7 +20,7 @@ export interface Tutor {
   memberSince: string;
   responseTime: string;
   teachingFormat: "online" | "in-person" | "both";
-  availability: Record<string, string[]>;
+  availability: string[];
   education: string[];
   subjectLevels: { subject: string; level: string }[];
   reviews: { name: string; date: string; rating: number; comment: string }[];
@@ -42,15 +42,7 @@ export const tutors: Tutor[] = [
     memberSince: "Sep 2023",
     responseTime: "< 2 hours",
     teachingFormat: "both",
-    availability: {
-      Mon: ["16:00-20:00"],
-      Tue: ["16:00-20:00"],
-      Wed: ["14:00-20:00"],
-      Thu: ["16:00-20:00"],
-      Fri: ["14:00-18:00"],
-      Sat: ["10:00-14:00"],
-      Sun: [],
-    },
+    availability: ["Weekday afternoons", "Weekday evenings", "Weekends"],
     education: [
       "BSc Mathematics, University of Iceland",
       "Teaching Certificate, Kennaraháskóli Íslands",
@@ -82,15 +74,7 @@ export const tutors: Tutor[] = [
     memberSince: "Jan 2024",
     responseTime: "< 1 hour",
     teachingFormat: "online",
-    availability: {
-      Mon: ["09:00-12:00", "17:00-21:00"],
-      Tue: ["09:00-12:00", "17:00-21:00"],
-      Wed: ["09:00-12:00"],
-      Thu: ["09:00-12:00", "17:00-21:00"],
-      Fri: ["09:00-12:00"],
-      Sat: [],
-      Sun: ["10:00-14:00"],
-    },
+    availability: ["Weekday mornings", "Weekday evenings", "Weekends"],
     education: [
       "BA English Literature, University of Copenhagen",
       "CELTA Certification",
@@ -120,15 +104,7 @@ export const tutors: Tutor[] = [
     memberSince: "Mar 2023",
     responseTime: "< 4 hours",
     teachingFormat: "in-person",
-    availability: {
-      Mon: ["15:00-19:00"],
-      Tue: [],
-      Wed: ["15:00-19:00"],
-      Thu: ["15:00-19:00"],
-      Fri: [],
-      Sat: ["09:00-13:00"],
-      Sun: [],
-    },
+    availability: ["Weekday afternoons", "Weekends"],
     education: [
       "MA Icelandic Studies, University of Iceland",
       "BA History, University of Iceland",
@@ -160,15 +136,7 @@ export const tutors: Tutor[] = [
     memberSince: "Jun 2024",
     responseTime: "< 3 hours",
     teachingFormat: "both",
-    availability: {
-      Mon: ["18:00-21:00"],
-      Tue: ["18:00-21:00"],
-      Wed: [],
-      Thu: ["18:00-21:00"],
-      Fri: [],
-      Sat: ["10:00-16:00"],
-      Sun: ["10:00-16:00"],
-    },
+    availability: ["Weekday evenings", "Weekends"],
     education: [
       "BSc Computer Science, Reykjavik University",
       "AWS Certified Developer",
@@ -198,15 +166,7 @@ export const tutors: Tutor[] = [
     memberSince: "Aug 2023",
     responseTime: "< 2 hours",
     teachingFormat: "both",
-    availability: {
-      Mon: ["14:00-18:00"],
-      Tue: ["14:00-18:00"],
-      Wed: ["14:00-18:00"],
-      Thu: [],
-      Fri: ["14:00-18:00"],
-      Sat: ["10:00-14:00"],
-      Sun: [],
-    },
+    availability: ["Weekday afternoons", "Weekends"],
     education: [
       "PhD Chemistry (in progress), University of Iceland",
       "MSc Chemistry, University of Barcelona",
@@ -236,15 +196,7 @@ export const tutors: Tutor[] = [
     memberSince: "Feb 2023",
     responseTime: "< 6 hours",
     teachingFormat: "in-person",
-    availability: {
-      Mon: ["09:00-16:00"],
-      Tue: ["09:00-16:00"],
-      Wed: ["09:00-16:00"],
-      Thu: ["09:00-16:00"],
-      Fri: ["09:00-12:00"],
-      Sat: [],
-      Sun: [],
-    },
+    availability: ["Weekday mornings", "Weekday afternoons", "Flexible"],
     education: [
       "MSc Physics, University of Iceland",
       "BSc Chemistry, University of Iceland",

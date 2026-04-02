@@ -1,10 +1,7 @@
 import { Link } from "react-router-dom";
 import {
   Calendar,
-  Search,
-  MessageCircle,
   Clock,
-  BookOpen,
   ArrowRight,
   MapPin,
 } from "lucide-react";
@@ -86,46 +83,6 @@ const Dashboard = () => {
           <p className="mt-1 text-steel">
             Here's what's happening with your lessons.
           </p>
-        </div>
-
-        {/* Quick actions */}
-        <div className="mb-8 grid gap-4 sm:grid-cols-3">
-          <Link
-            to="/browse"
-            className="flex items-center gap-4 rounded-lg border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md"
-          >
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              <Search size={20} />
-            </div>
-            <div>
-              <p className="font-semibold text-foreground">Find a teacher</p>
-              <p className="text-sm text-steel">Browse all subjects</p>
-            </div>
-          </Link>
-          <Link
-            to="/messages"
-            className="flex items-center gap-4 rounded-lg border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md"
-          >
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              <MessageCircle size={20} />
-            </div>
-            <div>
-              <p className="font-semibold text-foreground">Messages</p>
-              <p className="text-sm text-steel">1 unread message</p>
-            </div>
-          </Link>
-          <Link
-            to="/bookings"
-            className="flex items-center gap-4 rounded-lg border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md"
-          >
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              <Calendar size={20} />
-            </div>
-            <div>
-              <p className="font-semibold text-foreground">My bookings</p>
-              <p className="text-sm text-steel">2 upcoming lessons</p>
-            </div>
-          </Link>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-3">

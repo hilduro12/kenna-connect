@@ -6,17 +6,20 @@
  *  - Makes future Icelandic translation easier (swap this file or add is.ts)
  *  - Page-specific copy stays inline in each page — only shared strings live here
  *
- * Convention:
- *  - "teacher" in student-facing copy (not "tutor")
- *  - "tutor" only for internal code / role names
- *  - "lesson" everywhere (not "session")
- *  - "booking" for confirmed lessons, "request" for pending
+ * Terminology rules:
+ *  - "teacher"   in all student/parent-facing copy
+ *  - "tutor"     only in internal code (role names, component/file names, data types)
+ *  - "lesson"    everywhere (never "session")
+ *  - "booking"   for a confirmed lesson
+ *  - "request"   for a pending lesson request (never "contact" or "inquiry")
+ *  - "Start Teaching" as the CTA for the application (never "sign up as tutor")
+ *  - The application flow is always framed as "apply" (never "sign up")
  */
 
 /* ── Brand ── */
 export const BRAND = {
   name: "Kenna",
-  tagline: "Iceland's marketplace for private tutoring.",
+  tagline: "Iceland's marketplace for private lessons.",
   copyright: "Kenna ehf. All rights reserved.",
 } as const;
 
@@ -65,7 +68,6 @@ export const ACTIONS = {
   viewAll: "View all",
   viewProfile: "View profile",
   sendMessage: "Send message",
-  bookLesson: "Book lesson",
   requestLesson: "Request a lesson",
   leaveReview: "Leave a review",
   editProfile: "Edit profile",
@@ -102,21 +104,39 @@ export const FOOTER = {
 /* ── Teacher application ── */
 export const TEACHER_APPLICATION = {
   title: "Apply to teach on Kenna",
-  subtitle: "This is an application — not a sign-up. Once approved, you'll receive login credentials by email.",
-  submitApplication: "Submit Application",
+  subtitle: "This is an application, not a sign-up. Once approved, you'll receive login credentials by email.",
+  submitApplication: "Submit application",
   applicationReceived: "Application received!",
-  freeToApply: "It's free to apply. Kenna does not charge teachers a signup fee. You set your own rates and keep your earnings.",
+  freeToApply: "It's free to apply. Kenna does not charge teachers any fees. You set your own rates and keep your earnings.",
 } as const;
+
+/* ── Availability options (shared between application, profile edit, and display) ── */
+export const AVAILABILITY_OPTIONS = [
+  "Weekday mornings",
+  "Weekday afternoons",
+  "Weekday evenings",
+  "Weekends",
+  "Flexible",
+] as const;
 
 /* ── Terminology reference (for developers) ──
  *
  * Student-facing copy:
- *   teacher  (not "tutor")
- *   lesson   (not "session")
- *   booking  (confirmed lesson)
- *   request  (pending lesson request)
+ *   teacher    (not "tutor")
+ *   lesson     (not "session")
+ *   booking    (confirmed lesson)
+ *   request    (pending lesson request)
+ *
+ * CTAs:
+ *   "Start Teaching"       (the apply CTA)
+ *   "Request a lesson"     (student → teacher)
+ *   "Browse teachers"      (discovery)
  *
  * Internal / code:
- *   tutor    (role name, component names, data types)
- *   user     (generic logged-in person)
+ *   tutor      (role name, component names, data types)
+ *   user       (generic logged-in person)
+ *
+ * Application flow:
+ *   "apply" / "application"   (never "sign up" for teachers)
+ *   Status: pending_review → approved | rejected
  */

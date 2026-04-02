@@ -12,12 +12,9 @@ import {
   X,
   BookOpen,
   ChevronRight,
-  Search,
-  Filter,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -52,23 +49,11 @@ const Bookings = () => {
   const { user } = useAuth();
   const isTutor = user?.role === "tutor";
   const [activeTab, setActiveTab] = useState<TabKey>("upcoming");
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const nextLesson = useMemo(
-    () => bookings.find((b) => b.status === "confirmed"),
-    [],
-  );
 
   const filteredBookings = useMemo(() => {
     const statuses = tabFilters[activeTab];
-    return bookings
-      .filter((b) => statuses.includes(b.status))
-      .filter(
-        (b) =>
-          b.personName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          b.subject.toLowerCase().includes(searchQuery.toLowerCase()),
-      );
-  }, [activeTab, searchQuery]);
+    return bookings.filter((b) => statuses.includes(b.status));
+  }, [activeTab]);
 
   const tabCounts = useMemo(() => {
     const counts: Record<TabKey, number> = { pending: 0, upcoming: 0, past: 0, cancelled: 0 };
@@ -98,10 +83,10 @@ const Bookings = () => {
       ) : (
         <div className="flex flex-wrap gap-2">
           <Button size="sm" variant="ghost" className="gap-1.5 text-xs text-muted-foreground">
-            <MessageCircle className="h-3.5 w-3.5" /> Message tutor
+            <MessageCircle className="h-3.5 w-3.5" /> Message teacher
           </Button>
           <Button size="sm" variant="ghost" className="gap-1.5 text-xs text-muted-foreground">
-            <User className="h-3.5 w-3.5" /> View tutor
+            <User className="h-3.5 w-3.5" /> View teacher
           </Button>
         </div>
       );
@@ -123,7 +108,7 @@ const Bookings = () => {
             <MessageCircle className="h-3.5 w-3.5" /> Confirm details
           </Button>
           <Button size="sm" variant="ghost" className="gap-1.5 text-xs text-muted-foreground">
-            <User className="h-3.5 w-3.5" /> View tutor
+            <User className="h-3.5 w-3.5" /> View teacher
           </Button>
         </div>
       );
@@ -257,7 +242,7 @@ const Bookings = () => {
         {tab === "upcoming" && !isTutor && (
           <Link to="/browse">
             <Button className="mt-5 gap-1.5" size="sm">
-              Browse tutors <ChevronRight className="h-4 w-4" />
+              Browse teachers <ChevronRight className="h-4 w-4" />
             </Button>
           </Link>
         )}
@@ -276,47 +261,6 @@ const Bookings = () => {
             <h1 className="text-2xl font-bold text-foreground md:text-3xl">
               {isTutor ? "Schedule" : "Bookings"}
             </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {isTutor
-                ? "Manage lesson requests and your upcoming schedule."
-                : "Track your lesson requests, upcoming lessons, and past lessons."}
-            </p>
-          </div>
-
-          {/* Next lesson banner */}
-          {nextLesson && activeTab !== "past" && activeTab !== "cancelled" && (
-            <div className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50/60 p-4 sm:p-5">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-wide text-emerald-600">
-                    Next lesson
-                  </p>
-                  <p className="mt-1 text-sm font-semibold text-foreground">
-                    {nextLesson.subject} with {nextLesson.personName}
-                  </p>
-                  <p className="mt-0.5 text-xs text-muted-foreground">
-                    {nextLesson.date} at {nextLesson.time} · {locationLabels[nextLesson.location]}
-                  </p>
-                </div>
-                <Button size="sm" variant="outline" className="gap-1.5 text-xs border-emerald-300 text-emerald-700 hover:bg-emerald-100 shrink-0">
-                  <MessageCircle className="h-3.5 w-3.5" />
-                  Message {isTutor ? "student" : "teacher"}
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {/* Search */}
-          <div className="mb-5">
-            <div className="relative max-w-sm">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search by name or subject…"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 bg-card border-border text-sm"
-              />
-            </div>
           </div>
 
           {/* Tabs */}

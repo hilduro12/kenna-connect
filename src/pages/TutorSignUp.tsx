@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  Check, ChevronRight, Upload, Mail, Clock, UserCheck, ArrowRight,
+  Check, ChevronRight, Mail, Clock, UserCheck, ArrowRight,
   FileText, ShieldCheck, Send, AlertCircle,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -15,10 +15,18 @@ const allSubjects = [
 
 const locations = [
   "Reykjavík", "Kópavogur", "Hafnarfjörður", "Garðabær",
-  "Mosfellsbær", "Reykjanesbær", "Akureyri", "Selfoss", "Akranes", "Online",
+  "Mosfellsbær", "Reykjanesbær", "Akureyri", "Selfoss", "Akranes", "Online only",
 ];
 
-const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const availabilityOptions = [
+  "Weekday mornings",
+  "Weekday afternoons",
+  "Weekday evenings",
+  "Weekends",
+  "Flexible",
+];
+
+const formatOptions = ["Online", "In person", "Both"];
 
 /* ── Shared input style ── */
 const inputClass =
@@ -34,7 +42,7 @@ const timelineSteps = [
 
 const TutorSignUp = () => {
   const [step, setStep] = useState(1);
-  const totalSteps = 4;
+  const totalSteps = 3;
 
   /* ── Form state ── */
   const [name, setName] = useState("");
@@ -47,29 +55,29 @@ const TutorSignUp = () => {
   const [bio, setBio] = useState("");
   const [experience, setExperience] = useState("");
   const [education, setEducation] = useState("");
-  const [availability, setAvailability] = useState<Record<string, boolean>>({});
+  const [availability, setAvailability] = useState<string[]>([]);
+  const [teachingFormat, setTeachingFormat] = useState("");
 
   const toggleSubject = (s: string) =>
     setSubjects((prev) => (prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]));
 
-  const toggleSlot = (key: string) =>
-    setAvailability((prev) => ({ ...prev, [key]: !prev[key] }));
+  const toggleAvailability = (s: string) =>
+    setAvailability((prev) => (prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]));
 
   /* ── Validation ── */
   const step1Valid = name.trim() && email.trim() && phone.trim() && kennitala.trim() && location;
-  const step2Valid = subjects.length > 0 && rate && bio.trim();
-  const step3Valid = Object.values(availability).some(Boolean);
+  const step2Valid = subjects.length > 0 && rate && bio.trim() && availability.length > 0 && teachingFormat;
 
   const handleSubmit = () => {
-    // In production: POST to Supabase / API, send you an email notification
+    // In production: POST to Supabase / API, send admin notification email
     console.log("Application submitted:", {
       name, email, phone, kennitala, location,
       subjects, rate, bio, experience, education,
-      availability,
+      availability, teachingFormat,
       status: "pending_review",
       submittedAt: new Date().toISOString(),
     });
-    setStep(5);
+    setStep(4); // success screen
   };
 
   return (
@@ -87,13 +95,13 @@ const TutorSignUp = () => {
                   Apply to teach on Kenna
                 </h1>
                 <p className="mt-2 text-steel">
-                  This is an application — not a sign-up. Once approved, you'll receive login credentials by email.
+                  This is an application, not a sign-up. Once approved, you'll receive login credentials by email.
                 </p>
               </div>
 
               {/* Progress */}
-              <div className="mx-auto mt-8 flex max-w-md items-center justify-between">
-                {[1, 2, 3, 4].map((s) => (
+              <div className="mx-auto mt-8 flex max-w-xs items-center justify-between">
+                {[1, 2, 3].map((s) => (
                   <div key={s} className="flex items-center">
                     <div
                       className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold ${
@@ -120,7 +128,7 @@ const TutorSignUp = () => {
           {/* ══════════════════════════════════════════ */}
           {/* SUCCESS PAGE                              */}
           {/* ══════════════════════════════════════════ */}
-          {step === 5 ? (
+          {step === 4 ? (
             <div className="mx-auto mt-10 max-w-lg text-center">
               <div className="rounded-xl border border-border bg-card p-8 shadow-sm md:p-10">
                 <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
@@ -130,7 +138,7 @@ const TutorSignUp = () => {
                   Application received!
                 </h2>
                 <p className="mt-3 text-steel">
-                  Thank you for applying to teach on Kenna. We'll review your application and verify your identity. You'll receive an email with your login credentials once approved.
+                  Thank you for applying to teach on Kenna, {name.split(" ")[0]}. We'll review your application and get back to you by email.
                 </p>
 
                 {/* What happens next */}
@@ -143,31 +151,20 @@ const TutorSignUp = () => {
                       <ShieldCheck size={20} className="text-blue-600" />
                     </div>
                     <div>
-                      <p className="font-semibold text-foreground">Identity verification</p>
+                      <p className="font-semibold text-foreground">We review your application</p>
                       <p className="mt-0.5 text-sm text-steel">
-                        We verify your kennitala and credentials to ensure trust and safety.
+                        Our team checks your identity, qualifications, and teaching experience.
                       </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4 rounded-lg border border-border bg-light-bg p-4">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-green-100">
-                      <UserCheck size={20} className="text-green-600" />
+                      <Mail size={20} className="text-green-600" />
                     </div>
                     <div>
-                      <p className="font-semibold text-foreground">Application review</p>
+                      <p className="font-semibold text-foreground">You receive your login</p>
                       <p className="mt-0.5 text-sm text-steel">
-                        Our team reviews your profile, qualifications, and teaching experience.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4 rounded-lg border border-border bg-light-bg p-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-purple-100">
-                      <Mail size={20} className="text-purple-600" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-foreground">Login credentials sent</p>
-                      <p className="mt-0.5 text-sm text-steel">
-                        Once approved, you'll receive an email with a link to set your password and log in.
+                        Once approved, we'll email you a link to set your password and access your teacher dashboard.
                       </p>
                     </div>
                   </div>
@@ -188,11 +185,6 @@ const TutorSignUp = () => {
                   <Link to="/">
                     <Button size="lg">Back to home</Button>
                   </Link>
-                  <Link to="/browse">
-                    <Button variant="outline" size="lg" className="gap-1.5">
-                      Browse teachers <ArrowRight size={16} />
-                    </Button>
-                  </Link>
                 </div>
               </div>
             </div>
@@ -205,10 +197,10 @@ const TutorSignUp = () => {
             {/* ── Form card ── */}
             <div className="flex-1 rounded-lg border border-border bg-card p-6 shadow-sm">
 
-              {/* ── Step 1: Personal info + identity ── */}
+              {/* ── Step 1: About you ── */}
               {step === 1 && (
                 <div className="space-y-5">
-                  <h2 className="text-xl font-semibold text-foreground">Personal information</h2>
+                  <h2 className="text-xl font-semibold text-foreground">About you</h2>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div>
                       <label className="mb-1 block text-sm font-medium text-foreground">Full name *</label>
@@ -262,7 +254,7 @@ const TutorSignUp = () => {
                           Kennitala (national ID) *
                         </label>
                         <p className="mt-0.5 text-xs text-steel">
-                          Required for identity verification. Your kennitala is stored securely and never shared publicly.
+                          Required for identity verification. Stored securely and never shared publicly.
                         </p>
                         <input
                           className={`${inputClass} mt-2 bg-white`}
@@ -273,24 +265,14 @@ const TutorSignUp = () => {
                       </div>
                     </div>
                   </div>
-
-                  {/* Profile photo */}
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-foreground">Profile photo</label>
-                    <div className="flex h-32 cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-border hover:border-primary">
-                      <div className="text-center text-muted-foreground">
-                        <Upload size={24} className="mx-auto" />
-                        <p className="mt-1 text-sm">Click to upload</p>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               )}
 
-              {/* ── Step 2: Teaching details ── */}
+              {/* ── Step 2: Teaching details + availability ── */}
               {step === 2 && (
                 <div className="space-y-5">
                   <h2 className="text-xl font-semibold text-foreground">Teaching details</h2>
+
                   <div>
                     <label className="mb-1 block text-sm font-medium text-foreground">
                       Subjects you teach * <span className="text-xs text-cold">(select all that apply)</span>
@@ -313,16 +295,33 @@ const TutorSignUp = () => {
                       ))}
                     </div>
                   </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-foreground">Hourly rate (ISK) *</label>
-                    <input
-                      type="number"
-                      className={inputClass}
-                      placeholder="e.g. 6000"
-                      value={rate}
-                      onChange={(e) => setRate(e.target.value)}
-                    />
+
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                      <label className="mb-1 block text-sm font-medium text-foreground">Hourly rate (ISK) *</label>
+                      <input
+                        type="number"
+                        className={inputClass}
+                        placeholder="e.g. 6000"
+                        value={rate}
+                        onChange={(e) => setRate(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-sm font-medium text-foreground">Teaching format *</label>
+                      <select
+                        className={inputClass}
+                        value={teachingFormat}
+                        onChange={(e) => setTeachingFormat(e.target.value)}
+                      >
+                        <option value="">Select format...</option>
+                        {formatOptions.map((f) => (
+                          <option key={f} value={f}>{f}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
+
                   <div>
                     <label className="mb-1 block text-sm font-medium text-foreground">About you *</label>
                     <textarea
@@ -333,9 +332,12 @@ const TutorSignUp = () => {
                       onChange={(e) => setBio(e.target.value)}
                     />
                   </div>
+
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div>
-                      <label className="mb-1 block text-sm font-medium text-foreground">Teaching experience (years)</label>
+                      <label className="mb-1 block text-sm font-medium text-foreground">
+                        Teaching experience (years) <span className="text-xs text-cold">optional</span>
+                      </label>
                       <input
                         type="number"
                         className={inputClass}
@@ -345,7 +347,9 @@ const TutorSignUp = () => {
                       />
                     </div>
                     <div>
-                      <label className="mb-1 block text-sm font-medium text-foreground">Education / qualifications</label>
+                      <label className="mb-1 block text-sm font-medium text-foreground">
+                        Education / qualifications <span className="text-xs text-cold">optional</span>
+                      </label>
                       <input
                         className={inputClass}
                         placeholder="e.g. BSc in Mathematics"
@@ -354,46 +358,36 @@ const TutorSignUp = () => {
                       />
                     </div>
                   </div>
-                </div>
-              )}
 
-              {/* ── Step 3: Availability ── */}
-              {step === 3 && (
-                <div className="space-y-5">
-                  <h2 className="text-xl font-semibold text-foreground">Availability</h2>
-                  <p className="text-sm text-steel">
-                    Select when you're generally available to teach. You can update this later.
-                  </p>
-                  <div className="grid grid-cols-7 gap-2">
-                    {days.map((day) => (
-                      <div key={day} className="text-center">
-                        <p className="mb-2 text-xs font-semibold text-foreground">{day}</p>
-                        {["Morning", "Afternoon", "Evening"].map((time) => {
-                          const key = `${day}-${time}`;
-                          const active = availability[key] || false;
-                          return (
-                            <button
-                              key={time}
-                              type="button"
-                              onClick={() => toggleSlot(key)}
-                              className={`mb-1 flex w-full cursor-pointer items-center justify-center rounded border px-1 py-2 text-xs transition ${
-                                active
-                                  ? "border-primary bg-primary/10 font-medium text-primary"
-                                  : "border-border text-steel hover:bg-light-bg"
-                              }`}
-                            >
-                              {time.slice(0, 3)}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    ))}
+                  {/* Availability */}
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-foreground">
+                      General availability * <span className="text-xs text-cold">(select all that apply)</span>
+                    </label>
+                    <p className="mb-2 text-xs text-steel">You can discuss exact times with students later.</p>
+                    <div className="flex flex-wrap gap-2">
+                      {availabilityOptions.map((opt) => (
+                        <button
+                          key={opt}
+                          type="button"
+                          onClick={() => toggleAvailability(opt)}
+                          className={`rounded-full border px-3 py-1.5 text-sm transition ${
+                            availability.includes(opt)
+                              ? "border-primary bg-primary/10 font-medium text-primary"
+                              : "border-border text-steel hover:bg-light-bg"
+                          }`}
+                        >
+                          {availability.includes(opt) && <Check size={14} className="mr-1 inline" />}
+                          {opt}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
 
-              {/* ── Step 4: Review & submit ── */}
-              {step === 4 && (
+              {/* ── Step 3: Review & submit ── */}
+              {step === 3 && (
                 <div className="space-y-6">
                   <h2 className="text-xl font-semibold text-foreground">Review your application</h2>
                   <p className="text-sm text-steel">
@@ -427,6 +421,10 @@ const TutorSignUp = () => {
                         <p className="text-xs font-semibold uppercase text-cold">Hourly rate</p>
                         <p className="text-sm text-foreground">{rate ? `${Number(rate).toLocaleString()} ISK` : "—"}</p>
                       </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase text-cold">Format</p>
+                        <p className="text-sm text-foreground">{teachingFormat || "—"}</p>
+                      </div>
                     </div>
                     <div>
                       <p className="text-xs font-semibold uppercase text-cold">Subjects</p>
@@ -435,6 +433,18 @@ const TutorSignUp = () => {
                           ? subjects.map((s) => (
                               <span key={s} className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
                                 {s}
+                              </span>
+                            ))
+                          : <span className="text-sm text-steel">—</span>}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase text-cold">Availability</p>
+                      <div className="mt-1 flex flex-wrap gap-1.5">
+                        {availability.length > 0
+                          ? availability.map((a) => (
+                              <span key={a} className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                                {a}
                               </span>
                             ))
                           : <span className="text-sm text-steel">—</span>}
@@ -476,15 +486,14 @@ const TutorSignUp = () => {
                     className="gap-1"
                     disabled={
                       (step === 1 && !step1Valid) ||
-                      (step === 2 && !step2Valid) ||
-                      (step === 3 && !step3Valid)
+                      (step === 2 && !step2Valid)
                     }
                   >
                     Next <ChevronRight size={16} />
                   </Button>
                 ) : (
                   <Button onClick={handleSubmit} className="gap-1.5">
-                    <Send size={16} /> Submit Application
+                    <Send size={16} /> Submit application
                   </Button>
                 )}
               </div>
@@ -515,7 +524,7 @@ const TutorSignUp = () => {
                 <div className="flex items-start gap-2">
                   <FileText size={16} className="mt-0.5 shrink-0 text-cold" />
                   <p className="text-xs text-steel">
-                    It's free to apply. Kenna does not charge teachers a signup fee. You set your own rates and keep your earnings.
+                    It's free to apply. Kenna does not charge teachers any fees. You set your own rates and keep your earnings.
                   </p>
                 </div>
               </div>

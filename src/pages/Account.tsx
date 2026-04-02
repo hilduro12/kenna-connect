@@ -118,7 +118,7 @@ const Account = () => {
   const profileData = isTutor
     ? {
         name: user?.name || "Bjarki Þórsson",
-        email: user?.email || "bjarki@kennatutor.is",
+        email: user?.email || "bjarki@kenna.is",
         phone: "+354 612 3456",
         location: "Reykjavík",
         tagline: "Experienced English teacher — essay writing & exam prep",
@@ -403,7 +403,7 @@ const Account = () => {
 
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm font-medium text-foreground">Verified tutor</p>
+                          <p className="text-sm font-medium text-foreground">Verified teacher</p>
                           <p className="text-xs text-muted-foreground">Identity and credentials verified</p>
                         </div>
                         <Badge className="bg-emerald-100 text-emerald-700 text-xs">Verified</Badge>
@@ -415,7 +415,7 @@ const Account = () => {
                     <div className="rounded-lg border border-dashed border-border bg-muted/10 p-5 text-center">
                       <p className="text-sm font-medium text-foreground">Premium visibility coming soon</p>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        Get priority placement in search results and featured tutor spots.
+                        Get priority placement in search results and featured teacher spots.
                       </p>
                     </div>
                   </Section>
@@ -431,7 +431,7 @@ const Account = () => {
                             <Badge className="bg-primary text-primary-foreground text-[11px]">Active</Badge>
                           </div>
                           <p className="mt-1 text-xs text-muted-foreground">
-                            Unlimited messaging · Full tutor profiles · Priority support
+                            Unlimited messaging · Full teacher profiles · Priority support
                           </p>
                         </div>
                         <div className="text-right">

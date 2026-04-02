@@ -7,8 +7,36 @@
 
 import type { User } from "@/contexts/AuthContext";
 
-export type TutorStatus = "approved" | "pending_review" | "rejected";
+/* ── Tutor application status ── */
+export type TutorStatus = "pending_review" | "approved" | "rejected";
 
+/**
+ * Shape of a tutor application record.
+ * In production this would be a Supabase table row.
+ * Kept here as a reference for the data model.
+ */
+export interface TutorApplication {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  kennitala: string; // stored encrypted in production
+  location: string;
+  subjects: string[];
+  rate: number;
+  bio: string;
+  experience?: string;
+  education?: string;
+  availability: string[];       // e.g. ["Weekday evenings", "Weekends"]
+  teachingFormat: string;       // "Online" | "In person" | "Both"
+  status: TutorStatus;
+  submittedAt: string;          // ISO date
+  reviewedAt?: string;          // ISO date, set when admin acts
+  reviewedBy?: string;          // admin user id
+  rejectionReason?: string;     // only when status === "rejected"
+}
+
+/* ── Mock user accounts ── */
 export interface MockUser extends User {
   password: string;
   tutorStatus?: TutorStatus;

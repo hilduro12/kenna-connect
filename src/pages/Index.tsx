@@ -27,7 +27,7 @@ const subjects = [
 
 const steps = [
   { icon: Search, title: "Search", desc: "Browse teachers by subject, location, and price." },
-  { icon: Users, title: "Connect", desc: "Subscribe to contact teachers directly." },
+  { icon: Users, title: "Connect", desc: "Subscribe to message teachers and request lessons." },
   { icon: BookOpen, title: "Learn", desc: "Meet online or in person and start improving." },
 ];
 
@@ -171,7 +171,7 @@ const Index = () => {
         ) : (
           <div className="text-center">
             <h2 className="text-3xl font-bold text-foreground">Discover 100+ teachers across Iceland</h2>
-            <p className="mt-2 text-steel">Subscribe to see full profiles, contact teachers, and book lessons</p>
+            <p className="mt-2 text-steel">Subscribe to see full profiles, message teachers, and request lessons.</p>
             <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {tutors.slice(0, 4).map((tutor) => (
                 <BlurredTutorCard key={tutor.id} tutor={tutor} />

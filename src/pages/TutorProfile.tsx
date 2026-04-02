@@ -7,31 +7,6 @@ import Footer from "@/components/Footer";
 import StarRating from "@/components/StarRating";
 import { tutors } from "@/data/tutors";
 
-const dayOrder = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const dayLabels: Record<string, string> = {
-  Mon: "Monday",
-  Tue: "Tuesday",
-  Wed: "Wednesday",
-  Thu: "Thursday",
-  Fri: "Friday",
-  Sat: "Saturday",
-  Sun: "Sunday",
-};
-
-const timeCategories = [
-  { label: "Morning (9\u201312)", start: 9, end: 12 },
-  { label: "Afternoon (12\u201316)", start: 12, end: 16 },
-  { label: "Late afternoon (16\u201318)", start: 16, end: 18 },
-  { label: "Evening (18\u201320)", start: 18, end: 20 },
-];
-
-/** Check if any availability slot overlaps with a time category */
-const slotOverlaps = (slots: string[], catStart: number, catEnd: number) =>
-  slots.some((slot) => {
-    const [from, to] = slot.split("-").map((t) => parseInt(t.split(":")[0], 10));
-    return from < catEnd && to > catStart;
-  });
-
 const formatLabel = (format: string) => {
   switch (format) {
     case "online": return "Online only";
@@ -59,7 +34,7 @@ const TutorProfile = () => {
       <div className="min-h-screen">
         <Navbar />
         <div className="container py-20 text-center">
-          <p className="text-lg text-muted-foreground">Tutor not found.</p>
+          <p className="text-lg text-muted-foreground">Teacher not found.</p>
           <Link to="/browse" className="mt-4 inline-block text-sm text-primary underline">
             Back to Browse
           </Link>
@@ -149,34 +124,12 @@ const TutorProfile = () => {
             {/* Availability */}
             <section>
               <h2 className="text-xl font-semibold text-foreground">Availability</h2>
-              <div className="mt-4 space-y-4">
-                <div>
-                  <p className="text-sm font-medium text-foreground">Days</p>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {dayOrder
-                      .filter((day) => tutor.availability[day]?.length > 0)
-                      .map((day) => (
-                        <span key={day} className="rounded-full bg-light-bg px-3 py-1.5 text-sm font-medium text-steel">
-                          {dayLabels[day]}
-                        </span>
-                      ))}
-                  </div>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-foreground">Times</p>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {(() => {
-                      const allSlots = Object.values(tutor.availability).flat();
-                      return timeCategories
-                        .filter((cat) => slotOverlaps(allSlots, cat.start, cat.end))
-                        .map((cat) => (
-                          <span key={cat.label} className="rounded-full bg-light-bg px-3 py-1.5 text-sm font-medium text-steel">
-                            {cat.label}
-                          </span>
-                        ));
-                    })()}
-                  </div>
-                </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {tutor.availability.map((slot) => (
+                  <span key={slot} className="rounded-full bg-light-bg px-3 py-1.5 text-sm font-medium text-steel">
+                    {slot}
+                  </span>
+                ))}
               </div>
             </section>
 

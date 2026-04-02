@@ -125,7 +125,7 @@ const formats = [
 const forWhom = ["Myself", "My child"];
 const dayOptions = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const timeOptions = ["Morning (9–12)", "Afternoon (12–16)", "Late afternoon (16–18)", "Evening (18–20)"];
-const urgencyOptions = ["One-time help", "Exam preparation", "Weekly tutoring", "Ongoing support"];
+const urgencyOptions = ["One-time help", "Exam preparation", "Weekly lessons", "Ongoing support"];
 
 const RequestLessonDialog = ({ tutor, trigger }: RequestLessonDialogProps) => {
   const [open, setOpen] = useState(false);
@@ -254,7 +254,7 @@ const RequestLessonDialog = ({ tutor, trigger }: RequestLessonDialogProps) => {
       <div>
         <label className="text-xs font-semibold text-foreground">Message to {tutor.name.split(" ")[0]}</label>
         <p className="mt-0.5 text-[11px] text-muted-foreground">
-          Share what you need help with. The more detail you give, the better the teacher can prepare.
+          Share what you need help with. The more detail you give, the better they can prepare.
         </p>
         <Textarea
           className="mt-2 bg-background text-sm leading-relaxed"
@@ -326,7 +326,7 @@ const RequestLessonDialog = ({ tutor, trigger }: RequestLessonDialogProps) => {
       <div className="flex items-start gap-2 rounded-lg bg-emerald-50/60 px-3 py-2.5">
         <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600" />
         <p className="text-[11px] text-emerald-700 leading-relaxed">
-          No commitment until you and the tutor agree on the details. You can continue the conversation in messages.
+          No commitment until you and the teacher agree on the details. You can continue the conversation in messages.
         </p>
       </div>
     </div>
@@ -369,7 +369,7 @@ const RequestLessonDialog = ({ tutor, trigger }: RequestLessonDialogProps) => {
         </Link>
         <Link to="/browse">
           <Button variant="outline" className="w-full gap-1.5 sm:w-auto">
-            <Search className="h-4 w-4" /> Browse more tutors
+            <Search className="h-4 w-4" /> Browse more teachers
           </Button>
         </Link>
       </div>
