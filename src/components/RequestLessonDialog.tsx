@@ -139,7 +139,6 @@ const RequestLessonDialog = ({ tutor, trigger }: RequestLessonDialogProps) => {
   const [days, setDays] = useState<string[]>([]);
   const [times, setTimes] = useState<string[]>([]);
   const [urgency, setUrgency] = useState("");
-  const [flexible, setFlexible] = useState(true);
   const [message, setMessage] = useState("");
 
   const totalSteps = 5;
@@ -153,7 +152,6 @@ const RequestLessonDialog = ({ tutor, trigger }: RequestLessonDialogProps) => {
     setDays([]);
     setTimes([]);
     setUrgency("");
-    setFlexible(true);
     setMessage("");
   };
 
@@ -168,8 +166,8 @@ const RequestLessonDialog = ({ tutor, trigger }: RequestLessonDialogProps) => {
     return true;
   };
 
-  /* ─── Steps ─── */
-  const Step0 = () => (
+  /* ─── Step content (inline JSX, not components, to preserve focus across re-renders) ─── */
+  const step0 = (
     <div className="space-y-5">
       <div>
         <label className="text-xs font-semibold text-foreground">Subject</label>
@@ -215,7 +213,7 @@ const RequestLessonDialog = ({ tutor, trigger }: RequestLessonDialogProps) => {
     </div>
   );
 
-  const Step1 = () => (
+  const step1 = (
     <div className="space-y-5">
       <div>
         <label className="text-xs font-semibold text-foreground">Preferred day(s)</label>
@@ -248,25 +246,15 @@ const RequestLessonDialog = ({ tutor, trigger }: RequestLessonDialogProps) => {
           ))}
         </div>
       </div>
-
-      <div className="flex items-center gap-3 rounded-lg bg-muted/20 px-3 py-2.5">
-        <input
-          type="checkbox"
-          checked={flexible}
-          onChange={(e) => setFlexible(e.target.checked)}
-          className="h-4 w-4 rounded border-border"
-        />
-        <span className="text-xs text-foreground">I'm flexible on timing — the tutor can suggest alternatives</span>
-      </div>
     </div>
   );
 
-  const Step2 = () => (
+  const step2 = (
     <div className="space-y-4">
       <div>
         <label className="text-xs font-semibold text-foreground">Message to {tutor.name.split(" ")[0]}</label>
         <p className="mt-0.5 text-[11px] text-muted-foreground">
-          Share what you need help with. The more detail you give, the better the tutor can prepare.
+          Share what you need help with. The more detail you give, the better the teacher can prepare.
         </p>
         <Textarea
           className="mt-2 bg-background text-sm leading-relaxed"
@@ -287,10 +275,8 @@ const RequestLessonDialog = ({ tutor, trigger }: RequestLessonDialogProps) => {
     </div>
   );
 
-  const Step3 = () => (
+  const step3 = (
     <div className="space-y-4">
-      <TutorMiniCard tutor={tutor} />
-
       <div className="rounded-lg border border-border bg-background p-4 space-y-3">
         <div className="flex items-center justify-between">
           <span className="text-xs text-muted-foreground">Subject</span>
@@ -346,7 +332,7 @@ const RequestLessonDialog = ({ tutor, trigger }: RequestLessonDialogProps) => {
     </div>
   );
 
-  const Step4 = () => (
+  const step4 = (
     <div className="flex flex-col items-center text-center py-4">
       <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
         <Check className="h-7 w-7 text-emerald-600" />
@@ -398,18 +384,18 @@ const RequestLessonDialog = ({ tutor, trigger }: RequestLessonDialogProps) => {
   const stepTitles = [
     "Lesson details",
     "Scheduling preferences",
-    "Message to tutor",
+    "Message to teacher",
     "Review your request",
     "Request sent",
   ];
 
   const renderStep = () => {
     switch (step) {
-      case 0: return <Step0 />;
-      case 1: return <Step1 />;
-      case 2: return <Step2 />;
-      case 3: return <Step3 />;
-      case 4: return <Step4 />;
+      case 0: return step0;
+      case 1: return step1;
+      case 2: return step2;
+      case 3: return step3;
+      case 4: return step4;
       default: return null;
     }
   };
@@ -446,7 +432,7 @@ const RequestLessonDialog = ({ tutor, trigger }: RequestLessonDialogProps) => {
             </div>
           )}
 
-          {step < 4 && step > 0 && step < 4 && (
+          {step > 0 && step < 4 && (
             <div className="mt-3">
               <TutorMiniCard tutor={tutor} />
             </div>

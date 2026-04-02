@@ -19,6 +19,7 @@ export interface Tutor {
   verified: boolean;
   memberSince: string;
   responseTime: string;
+  teachingFormat: "online" | "in-person" | "both";
   availability: Record<string, string[]>;
   education: string[];
   subjectLevels: { subject: string; level: string }[];
@@ -40,6 +41,7 @@ export const tutors: Tutor[] = [
     verified: true,
     memberSince: "Sep 2023",
     responseTime: "< 2 hours",
+    teachingFormat: "both",
     availability: {
       Mon: ["16:00-20:00"],
       Tue: ["16:00-20:00"],
@@ -79,6 +81,7 @@ export const tutors: Tutor[] = [
     verified: true,
     memberSince: "Jan 2024",
     responseTime: "< 1 hour",
+    teachingFormat: "online",
     availability: {
       Mon: ["09:00-12:00", "17:00-21:00"],
       Tue: ["09:00-12:00", "17:00-21:00"],
@@ -116,6 +119,7 @@ export const tutors: Tutor[] = [
     verified: true,
     memberSince: "Mar 2023",
     responseTime: "< 4 hours",
+    teachingFormat: "in-person",
     availability: {
       Mon: ["15:00-19:00"],
       Tue: [],
@@ -155,6 +159,7 @@ export const tutors: Tutor[] = [
     verified: true,
     memberSince: "Jun 2024",
     responseTime: "< 3 hours",
+    teachingFormat: "both",
     availability: {
       Mon: ["18:00-21:00"],
       Tue: ["18:00-21:00"],
@@ -192,6 +197,7 @@ export const tutors: Tutor[] = [
     verified: true,
     memberSince: "Aug 2023",
     responseTime: "< 2 hours",
+    teachingFormat: "both",
     availability: {
       Mon: ["14:00-18:00"],
       Tue: ["14:00-18:00"],
@@ -229,6 +235,7 @@ export const tutors: Tutor[] = [
     verified: true,
     memberSince: "Feb 2023",
     responseTime: "< 6 hours",
+    teachingFormat: "in-person",
     availability: {
       Mon: ["09:00-16:00"],
       Tue: ["09:00-16:00"],

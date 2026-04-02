@@ -3,23 +3,30 @@ import { Link, useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
+const IS_DEV = import.meta.env.DEV;
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    login(email, password);
-    // In production: after auth, check user.role from the DB and route accordingly
-    // For now the mock always creates a student, so we go to /dashboard
-    // A tutor would go to /tutor-dashboard
-    navigate("/dashboard");
+    setError("");
+    const redirectPath = login(email, password);
+    navigate(redirectPath);
+  };
+
+  const handleQuickLogin = (demoEmail: string, demoPassword: string) => {
+    setError("");
+    const redirectPath = login(demoEmail, demoPassword);
+    navigate(redirectPath);
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4 pt-8 pb-12">
       <div className="relative w-full max-w-sm">
         {/* Close button */}
         <button
@@ -57,6 +64,9 @@ const Login = () => {
               placeholder="Password"
               className="w-full rounded-full bg-light-bg px-5 py-3 text-sm text-foreground placeholder:text-cold outline-none focus:ring-2 focus:ring-primary"
             />
+            {error && (
+              <p className="text-center text-xs text-red-500">{error}</p>
+            )}
             <button
               type="submit"
               className="w-full rounded-full bg-foreground py-3 text-sm font-semibold text-background transition-opacity hover:opacity-90"
@@ -95,6 +105,41 @@ const Login = () => {
             By logging in, you agree to our{" "}
             <a href="#" className="underline hover:text-steel">legal notices</a>
           </p>
+
+          {/* ── Dev-only quick login buttons ── */}
+          {IS_DEV && (
+            <div className="w-full border-t border-dashed border-border pt-6 pb-4">
+              <p className="mb-3 text-center text-xs font-semibold uppercase tracking-wider text-cold">
+                Dev quick login
+              </p>
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={() => handleQuickLogin("student@kenna.test", "demo123")}
+                  className="w-full rounded-full border border-blue-200 bg-blue-50 py-2.5 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100"
+                >
+                  Student (no subscription)
+                </button>
+                <button
+                  onClick={() => handleQuickLogin("subscribed@kenna.test", "demo123")}
+                  className="w-full rounded-full border border-indigo-200 bg-indigo-50 py-2.5 text-xs font-medium text-indigo-700 transition-colors hover:bg-indigo-100"
+                >
+                  Student (subscribed)
+                </button>
+                <button
+                  onClick={() => handleQuickLogin("tutor@kenna.test", "demo123")}
+                  className="w-full rounded-full border border-green-200 bg-green-50 py-2.5 text-xs font-medium text-green-700 transition-colors hover:bg-green-100"
+                >
+                  Approved tutor
+                </button>
+                <button
+                  onClick={() => handleQuickLogin("pendingtutor@kenna.test", "demo123")}
+                  className="w-full rounded-full border border-amber-200 bg-amber-50 py-2.5 text-xs font-medium text-amber-700 transition-colors hover:bg-amber-100"
+                >
+                  Pending tutor
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

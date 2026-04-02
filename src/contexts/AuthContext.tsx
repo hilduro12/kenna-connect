@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from "react";
+import { authenticateMockUser, type TutorStatus } from "@/data/mock-users";
 
 export interface User {
   id: string;
@@ -9,6 +10,8 @@ export interface User {
   roles: string[];
   /** Whether the user has an active student subscription */
   subscribed: boolean;
+  /** Tutor-specific: approval status. Only relevant when role includes "tutor". */
+  tutorStatus?: TutorStatus;
 }
 
 interface AuthContextType {
@@ -19,14 +22,31 @@ interface AuthContextType {
   hasStudentAccess: boolean;
   previewLoggedIn: boolean;
   togglePreview: () => void;
-  /** Switch the active role between tutor ↔ student (for dual-role users) */
+  /** Switch the active role between tutor <-> student (for dual-role users) */
   toggleRole: () => void;
-  login: (email: string, password: string) => void;
+  /**
+   * Log in with email + password.
+   * Returns the redirect path based on role/status so the caller can navigate.
+   */
+  login: (email: string, password: string) => string;
   logout: () => void;
   signup: (data: { name: string; email: string; password: string; role: "student" | "parent" | "tutor" }) => void;
+  /** Mock: activate a student subscription. Replace with Stripe/billing later. */
+  activateSubscription: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+/** Decide where to send a user after login based on role + status + subscription */
+function getRedirectPath(user: User): string {
+  if (user.role === "tutor") {
+    if (user.tutorStatus === "pending_review") return "/application-pending";
+    return "/tutor-dashboard";
+  }
+  // Students/parents without subscription → choose plan
+  if (!user.subscribed) return "/choose-plan";
+  return "/dashboard";
+}
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(() => {
@@ -66,7 +86,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const toggleRole = () => {
     if (!user) return;
-    // Only allow toggling if user has multiple roles
     if (user.roles.length <= 1) return;
     const newRole = user.role === "tutor" ? "student" : "tutor";
     const updated = { ...user, role: newRole as User["role"] };
@@ -74,19 +93,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("kenna_user", JSON.stringify(updated));
   };
 
-  const login = (email: string, _password: string) => {
-    // In production: call Supabase auth, retrieve user profile + roles
-    // Mock: create a student user. The real system would look up the user's role.
-    const mockUser: User = {
-      id: "1",
-      name: "Demo User",
+  const login = (email: string, password: string): string => {
+    // Try mock users first (development)
+    const mockResult = authenticateMockUser(email, password);
+
+    if (mockResult) {
+      const authUser: User = { ...mockResult.user, tutorStatus: mockResult.tutorStatus };
+      setUser(authUser);
+      localStorage.setItem("kenna_user", JSON.stringify(authUser));
+      return getRedirectPath(authUser);
+    }
+
+    // Fallback: create a generic student user (for any email/password in dev)
+    // In production: replace with Supabase auth call
+    const fallbackUser: User = {
+      id: crypto.randomUUID(),
+      name: email.split("@")[0],
       email,
       role: "student",
       roles: ["student"],
-      subscribed: true,
+      subscribed: false,
     };
-    setUser(mockUser);
-    localStorage.setItem("kenna_user", JSON.stringify(mockUser));
+    setUser(fallbackUser);
+    localStorage.setItem("kenna_user", JSON.stringify(fallbackUser));
+    return getRedirectPath(fallbackUser);
   };
 
   const signup = (data: { name: string; email: string; password: string; role: "student" | "parent" | "tutor" }) => {
@@ -96,10 +126,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       email: data.email,
       role: data.role,
       roles: [data.role],
-      subscribed: false, // New students start unsubscribed
+      subscribed: false,
     };
     setUser(newUser);
     localStorage.setItem("kenna_user", JSON.stringify(newUser));
+  };
+
+  const activateSubscription = () => {
+    if (!user) return;
+    const updated = { ...user, subscribed: true };
+    setUser(updated);
+    localStorage.setItem("kenna_user", JSON.stringify(updated));
   };
 
   const logout = () => {
@@ -120,6 +157,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         login,
         logout,
         signup,
+        activateSubscription,
       }}
     >
       {children}

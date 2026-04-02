@@ -34,7 +34,7 @@ const studentRequests = [
     subject: "Physics",
     date: "Thu, Apr 10",
     time: "18:00 – 19:00",
-    message: "I'm struggling with mechanics and need weekly sessions.",
+    message: "I'm struggling with mechanics and need weekly lessons.",
     sentAgo: "1 day ago",
   },
 ];

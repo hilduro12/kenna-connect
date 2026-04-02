@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { BadgeCheck, MapPin, Clock, ArrowLeft } from "lucide-react";
+import { BadgeCheck, MapPin, Clock, ArrowLeft, Video, Users } from "lucide-react";
 import RequestLessonDialog from "@/components/RequestLessonDialog";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
@@ -7,7 +7,48 @@ import Footer from "@/components/Footer";
 import StarRating from "@/components/StarRating";
 import { tutors } from "@/data/tutors";
 
-const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const dayOrder = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const dayLabels: Record<string, string> = {
+  Mon: "Monday",
+  Tue: "Tuesday",
+  Wed: "Wednesday",
+  Thu: "Thursday",
+  Fri: "Friday",
+  Sat: "Saturday",
+  Sun: "Sunday",
+};
+
+const timeCategories = [
+  { label: "Morning (9\u201312)", start: 9, end: 12 },
+  { label: "Afternoon (12\u201316)", start: 12, end: 16 },
+  { label: "Late afternoon (16\u201318)", start: 16, end: 18 },
+  { label: "Evening (18\u201320)", start: 18, end: 20 },
+];
+
+/** Check if any availability slot overlaps with a time category */
+const slotOverlaps = (slots: string[], catStart: number, catEnd: number) =>
+  slots.some((slot) => {
+    const [from, to] = slot.split("-").map((t) => parseInt(t.split(":")[0], 10));
+    return from < catEnd && to > catStart;
+  });
+
+const formatLabel = (format: string) => {
+  switch (format) {
+    case "online": return "Online only";
+    case "in-person": return "In person only";
+    case "both": return "Online & in person";
+    default: return format;
+  }
+};
+
+const formatIcon = (format: string) => {
+  switch (format) {
+    case "online": return <Video size={14} />;
+    case "in-person": return <MapPin size={14} />;
+    case "both": return <Users size={14} />;
+    default: return null;
+  }
+};
 
 const TutorProfile = () => {
   const { id } = useParams();
@@ -62,21 +103,6 @@ const TutorProfile = () => {
               </div>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              {[
-                { label: "Hourly rate", value: `${tutor.pricePerHour.toLocaleString()} ISK` },
-                { label: "Reviews", value: tutor.reviewCount.toString() },
-                { label: "Rating", value: tutor.rating.toString() },
-                { label: "Response time", value: tutor.responseTime },
-              ].map((s) => (
-                <div key={s.label} className="rounded-lg border border-border bg-card p-4 text-center">
-                  <p className="text-2xl font-bold text-foreground">{s.value}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">{s.label}</p>
-                </div>
-              ))}
-            </div>
-
             {/* About */}
             <section>
               <h2 className="text-xl font-semibold text-foreground">About me</h2>
@@ -85,11 +111,23 @@ const TutorProfile = () => {
 
             {/* Subjects */}
             <section>
-              <h2 className="text-xl font-semibold text-foreground">Subjects I teach</h2>
+              <h2 className="text-xl font-semibold text-foreground">Subjects</h2>
               <div className="mt-3 flex flex-wrap gap-2">
-                {tutor.subjectLevels.map((sl, i) => (
-                  <span key={i} className="rounded-full bg-light-bg px-3 py-1.5 text-sm font-medium text-steel">
-                    {sl.subject} — {sl.level}
+                {[...new Set(tutor.subjectLevels.map((sl) => sl.subject))].map((subject) => (
+                  <span key={subject} className="rounded-full bg-light-bg px-3 py-1.5 text-sm font-medium text-steel">
+                    {subject}
+                  </span>
+                ))}
+              </div>
+            </section>
+
+            {/* Levels */}
+            <section>
+              <h2 className="text-xl font-semibold text-foreground">Levels</h2>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {[...new Set(tutor.subjectLevels.map((sl) => sl.level))].map((level) => (
+                  <span key={level} className="rounded-full bg-light-bg px-3 py-1.5 text-sm font-medium text-steel">
+                    {level}
                   </span>
                 ))}
               </div>
@@ -111,19 +149,34 @@ const TutorProfile = () => {
             {/* Availability */}
             <section>
               <h2 className="text-xl font-semibold text-foreground">Availability</h2>
-              <div className="mt-3 grid grid-cols-7 gap-2">
-                {days.map((day) => (
-                  <div key={day} className="text-center">
-                    <p className="mb-2 text-xs font-semibold text-foreground">{day}</p>
-                    {tutor.availability[day]?.length > 0 ? (
-                      tutor.availability[day].map((slot, i) => (
-                        <p key={i} className="rounded bg-light-bg px-1 py-1 text-xs text-steel">{slot}</p>
-                      ))
-                    ) : (
-                      <p className="text-xs text-cold">—</p>
-                    )}
+              <div className="mt-4 space-y-4">
+                <div>
+                  <p className="text-sm font-medium text-foreground">Days</p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {dayOrder
+                      .filter((day) => tutor.availability[day]?.length > 0)
+                      .map((day) => (
+                        <span key={day} className="rounded-full bg-light-bg px-3 py-1.5 text-sm font-medium text-steel">
+                          {dayLabels[day]}
+                        </span>
+                      ))}
                   </div>
-                ))}
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-foreground">Times</p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {(() => {
+                      const allSlots = Object.values(tutor.availability).flat();
+                      return timeCategories
+                        .filter((cat) => slotOverlaps(allSlots, cat.start, cat.end))
+                        .map((cat) => (
+                          <span key={cat.label} className="rounded-full bg-light-bg px-3 py-1.5 text-sm font-medium text-steel">
+                            {cat.label}
+                          </span>
+                        ));
+                    })()}
+                  </div>
+                </div>
               </div>
             </section>
 
@@ -158,17 +211,15 @@ const TutorProfile = () => {
                 </p>
                 <p className="text-sm text-muted-foreground">per hour</p>
               </div>
-              <div className="flex justify-center">
-                <StarRating rating={tutor.rating} count={tutor.reviewCount} />
+              <div className="flex items-center justify-center gap-1.5 text-sm text-steel">
+                {formatIcon(tutor.teachingFormat)}
+                {formatLabel(tutor.teachingFormat)}
               </div>
               <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground">
                 <Clock size={12} />
                 Responds in {tutor.responseTime}
               </div>
               <RequestLessonDialog tutor={tutor} />
-              <p className="text-center text-xs text-muted-foreground">
-                No commitment — discuss details with the tutor first
-              </p>
             </div>
           </aside>
         </div>

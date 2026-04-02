@@ -1,21 +1,23 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
-import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const SignUp = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const { signup } = useAuth();
   const navigate = useNavigate();
 
-  const handleEmailSignup = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    signup({ name: email.split("@")[0], email, password: "", role: "student" });
+    signup({ name, email, password, role: "student" });
     navigate("/dashboard");
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4 pt-8 pb-12">
       <div className="relative w-full max-w-sm">
         {/* Close button */}
         <button
@@ -33,10 +35,19 @@ const SignUp = () => {
           </Link>
 
           {/* Heading */}
-          <h1 className="mt-8 text-2xl font-bold text-foreground">Sign up</h1>
+          <h1 className="mt-8 text-2xl font-bold text-foreground">Create an account</h1>
+          <p className="mt-2 text-sm text-steel">Find the right teacher for you or your child</p>
 
           {/* Form */}
-          <form onSubmit={handleEmailSignup} className="mt-8 w-full space-y-3">
+          <form onSubmit={handleSubmit} className="mt-8 w-full space-y-3">
+            <input
+              type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Full name"
+              className="w-full rounded-full bg-light-bg px-5 py-3 text-sm text-foreground placeholder:text-cold outline-none focus:ring-2 focus:ring-primary"
+            />
             <input
               type="email"
               required
@@ -45,11 +56,21 @@ const SignUp = () => {
               placeholder="Email address"
               className="w-full rounded-full bg-light-bg px-5 py-3 text-sm text-foreground placeholder:text-cold outline-none focus:ring-2 focus:ring-primary"
             />
+            <input
+              type="password"
+              required
+              minLength={8}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password (min. 8 characters)"
+              className="w-full rounded-full bg-light-bg px-5 py-3 text-sm text-foreground placeholder:text-cold outline-none focus:ring-2 focus:ring-primary"
+            />
+
             <button
               type="submit"
               className="w-full rounded-full bg-foreground py-3 text-sm font-semibold text-background transition-opacity hover:opacity-90"
             >
-              Sign up by email
+              Create account
             </button>
           </form>
 
@@ -72,10 +93,14 @@ const SignUp = () => {
             </button>
           </div>
 
-          {/* Login link */}
+          {/* Links */}
           <p className="mt-8 text-sm text-steel">
             Already have an account?{" "}
             <Link to="/login" className="font-bold text-foreground hover:underline">Log in</Link>
+          </p>
+          <p className="mt-3 text-sm text-steel">
+            Want to teach on Kenna?{" "}
+            <Link to="/tutor-signup" className="font-bold text-foreground hover:underline">Apply here</Link>
           </p>
 
           {/* Legal */}

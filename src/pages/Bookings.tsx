@@ -141,7 +141,7 @@ const Bookings = () => {
             </Button>
           )}
           <Button size="sm" variant="ghost" className="gap-1.5 text-xs text-muted-foreground">
-            <User className="h-3.5 w-3.5" /> View {isTutor ? "student" : "tutor"}
+            <User className="h-3.5 w-3.5" /> View {isTutor ? "student" : "teacher"}
           </Button>
         </div>
       );
@@ -235,7 +235,7 @@ const Bookings = () => {
       },
       upcoming: {
         title: "No upcoming lessons",
-        desc: "Your confirmed lessons will show up here. Browse tutors to get started.",
+        desc: "Your confirmed lessons will show up here. Browse teachers to get started.",
       },
       past: {
         title: "No past lessons yet",
@@ -279,7 +279,7 @@ const Bookings = () => {
             <p className="mt-1 text-sm text-muted-foreground">
               {isTutor
                 ? "Manage lesson requests and your upcoming schedule."
-                : "Track your lesson requests, upcoming sessions, and past lessons."}
+                : "Track your lesson requests, upcoming lessons, and past lessons."}
             </p>
           </div>
 
@@ -300,7 +300,7 @@ const Bookings = () => {
                 </div>
                 <Button size="sm" variant="outline" className="gap-1.5 text-xs border-emerald-300 text-emerald-700 hover:bg-emerald-100 shrink-0">
                   <MessageCircle className="h-3.5 w-3.5" />
-                  Message {isTutor ? "student" : "tutor"}
+                  Message {isTutor ? "student" : "teacher"}
                 </Button>
               </div>
             </div>

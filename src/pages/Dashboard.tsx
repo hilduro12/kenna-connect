@@ -6,7 +6,6 @@ import {
   Clock,
   BookOpen,
   ArrowRight,
-  Star,
   MapPin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -85,7 +84,7 @@ const Dashboard = () => {
             Welcome back, {firstName}
           </h1>
           <p className="mt-1 text-steel">
-            Here's what's happening with your tutoring.
+            Here's what's happening with your lessons.
           </p>
         </div>
 
@@ -99,7 +98,7 @@ const Dashboard = () => {
               <Search size={20} />
             </div>
             <div>
-              <p className="font-semibold text-foreground">Find a tutor</p>
+              <p className="font-semibold text-foreground">Find a teacher</p>
               <p className="text-sm text-steel">Browse all subjects</p>
             </div>
           </Link>
@@ -203,7 +202,7 @@ const Dashboard = () => {
             <section>
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold text-foreground">
-                  Saved tutors
+                  Saved teachers
                 </h2>
                 <Link
                   to="/browse"
@@ -316,59 +315,6 @@ const Dashboard = () => {
               </div>
             </section>
 
-            {/* Stats / subscription info */}
-            <section className="rounded-lg border border-border bg-card p-5 shadow-sm">
-              <h3 className="font-bold text-foreground">Your subscription</h3>
-              <div className="mt-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-steel">Plan</span>
-                  <span className="text-sm font-medium text-foreground">
-                    Kenna Monthly
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-steel">Status</span>
-                  <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
-                    Active
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-steel">Renews</span>
-                  <span className="text-sm font-medium text-foreground">
-                    May 2, 2026
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-steel">Lessons booked</span>
-                  <span className="text-sm font-medium text-foreground">7</span>
-                </div>
-              </div>
-              <Link to="/account">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="mt-4 w-full text-steel"
-                >
-                  Manage subscription
-                </Button>
-              </Link>
-            </section>
-
-            {/* Quick tip */}
-            <section className="rounded-lg border border-border bg-primary/5 p-5">
-              <div className="flex items-start gap-3">
-                <Star size={20} className="mt-0.5 shrink-0 text-primary" />
-                <div>
-                  <p className="text-sm font-semibold text-foreground">
-                    Leave a review
-                  </p>
-                  <p className="mt-1 text-sm text-steel">
-                    Had a great lesson? Help other students by reviewing your
-                    tutor.
-                  </p>
-                </div>
-              </div>
-            </section>
           </div>
         </div>
       </div>

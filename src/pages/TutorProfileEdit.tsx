@@ -221,7 +221,7 @@ const TutorProfileEdit = () => {
                     <div>
                       <label className="text-xs font-medium text-foreground">Headline</label>
                       <Input
-                        defaultValue="Experienced math & science tutor — exam prep specialist"
+                        defaultValue="Experienced math & science teacher — exam prep specialist"
                         className="mt-1.5 bg-background"
                       />
                       <p className="mt-1 text-[11px] text-muted-foreground">
@@ -262,7 +262,7 @@ const TutorProfileEdit = () => {
               {/* 2 — About / bio */}
               <Section
                 title="About you"
-                description="Tell parents and students what makes you a great tutor."
+                description="Tell parents and students what makes you a great teacher."
               >
                 <Textarea
                   rows={6}
@@ -334,14 +334,14 @@ const TutorProfileEdit = () => {
                     <Input defaultValue="7.500" className="mt-1.5 bg-background" />
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-foreground">First session rate (optional)</label>
+                    <label className="text-xs font-medium text-foreground">First lesson rate (optional)</label>
                     <Input defaultValue="5.000" placeholder="e.g. intro rate" className="mt-1.5 bg-background" />
                   </div>
                 </div>
                 <div className="mt-3 flex items-start gap-1.5 text-[11px] text-muted-foreground">
                   <Info className="mt-0.5 h-3 w-3 shrink-0" />
                   <span>
-                    Offering a reduced intro rate can help new students try a session with you.
+                    Offering a reduced intro rate can help new students try a lesson with you.
                   </span>
                 </div>
               </Section>

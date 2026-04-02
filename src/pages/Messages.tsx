@@ -251,7 +251,7 @@ const Messages = () => {
       </div>
       <h2 className="text-lg font-semibold text-foreground">Select a conversation</h2>
       <p className="mt-1.5 max-w-sm text-sm text-muted-foreground">
-        Choose a conversation from the list to start messaging. You can reach out to tutors before booking a lesson.
+        Choose a conversation from the list to start messaging. You can reach out to teachers before booking a lesson.
       </p>
     </div>
   );

@@ -251,13 +251,13 @@ const Account = () => {
                       <Switch defaultChecked />
                       <div>
                         <p className="text-sm font-medium text-foreground">Available for online lessons</p>
-                        <p className="text-xs text-muted-foreground">Students can book online sessions with you</p>
+                        <p className="text-xs text-muted-foreground">Students can book online lessons with you</p>
                       </div>
                     </div>
                   </div>
                 </Section>
               ) : (
-                <Section title="Learning preferences" description="Help us match you with the right tutors.">
+                <Section title="Learning preferences" description="Help us match you with the right teachers.">
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div>
                       <label className="text-xs font-medium text-foreground">Student name</label>
@@ -325,8 +325,8 @@ const Account = () => {
                     defaultChecked
                   />
                   <ToggleRow
-                    label={isTutor ? "New inquiries" : "Tutor replies"}
-                    description={isTutor ? "Be alerted when a student or parent reaches out" : "Get notified when a tutor responds to your message"}
+                    label={isTutor ? "New inquiries" : "Teacher replies"}
+                    description={isTutor ? "Be alerted when a student or parent reaches out" : "Get notified when a teacher responds to your message"}
                     defaultChecked
                   />
                 </div>
@@ -537,7 +537,7 @@ const Account = () => {
                       <VerificationRow
                         icon={ShieldCheck}
                         label="Trusted platform"
-                        status="All tutors verified"
+                        status="All teachers verified"
                         statusColor="text-emerald-600"
                       />
                       <VerificationRow
