@@ -26,6 +26,7 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useToast } from "@/hooks/use-toast";
 
 /* ─── Section card ─── */
 const Section = ({
@@ -137,6 +138,15 @@ const allSpecializations = [
 ];
 
 const TutorProfileEdit = () => {
+  const { toast } = useToast();
+
+  const handleSave = () => {
+    toast({
+      title: "Profile saved",
+      description: "Your changes are now visible to students and parents.",
+    });
+  };
+
   /* ─── State ─── */
   const [subjects, setSubjects] = useState(["Mathematics", "Physics", "Chemistry"]);
   const [levels, setLevels] = useState(["Grunnskóli", "Menntaskóli"]);
@@ -169,7 +179,7 @@ const TutorProfileEdit = () => {
               <Button variant="outline" className="gap-1.5 text-sm">
                 <Eye className="h-4 w-4" /> Preview
               </Button>
-              <Button className="gap-1.5 text-sm">
+              <Button className="gap-1.5 text-sm" onClick={handleSave}>
                 <Save className="h-4 w-4" /> Save changes
               </Button>
             </div>

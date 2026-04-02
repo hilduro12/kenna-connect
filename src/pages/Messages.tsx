@@ -182,7 +182,7 @@ const Messages = () => {
           {conversation.status === "inquiry" && (
             <Button size="sm" variant="outline" className="text-xs gap-1.5">
               <Calendar className="h-3.5 w-3.5" />
-              Book lesson
+              Request lesson
             </Button>
           )}
           <Button size="sm" variant="ghost" className="text-xs gap-1.5 text-muted-foreground">

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import {
   Check, ChevronRight, Mail, Clock, UserCheck, ArrowRight,
-  FileText, ShieldCheck, Send, AlertCircle,
+  FileText, ShieldCheck, Send, AlertCircle, Loader2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { supabase } from "@/lib/supabase";
 
 const allSubjects = [
   "Mathematics", "English", "Danish", "Physics",
@@ -63,19 +64,40 @@ const TutorSignUp = () => {
   const toggleAvailability = (s: string) =>
     setAvailability((prev) => (prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]));
 
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   /* ── Validation ── */
   const step1Valid = name.trim() && email.trim() && phone.trim() && location;
   const step2Valid = subjects.length > 0 && rate && bio.trim() && availability.length > 0 && teachingFormat;
 
-  const handleSubmit = () => {
-    // In production: POST to Supabase / API, send admin notification email
-    console.log("Application submitted:", {
-      name, email, phone, location,
-      subjects, rate, bio, experience, education,
-      availability, teachingFormat,
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    setSubmitError(null);
+
+    const { error } = await supabase.from("tutor_applications").insert({
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      location,
+      subjects,
+      rate: Number(rate),
+      bio: bio.trim(),
+      experience: experience.trim() || null,
+      education: education.trim() || null,
+      availability,
+      teaching_format: teachingFormat,
       status: "pending_review",
-      submittedAt: new Date().toISOString(),
     });
+
+    setSubmitting(false);
+
+    if (error) {
+      console.error("Supabase insert error:", error);
+      setSubmitError("Something went wrong. Please try again.");
+      return;
+    }
+
     setStep(4); // success screen
   };
 
@@ -446,6 +468,14 @@ const TutorSignUp = () => {
                 </div>
               )}
 
+              {/* Error message */}
+              {submitError && (
+                <div className="mt-4 flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                  <AlertCircle size={16} className="shrink-0" />
+                  {submitError}
+                </div>
+              )}
+
               {/* ── Navigation buttons ── */}
               <div className="mt-8 flex justify-between">
                 {step > 1 ? (
@@ -467,8 +497,12 @@ const TutorSignUp = () => {
                     Next <ChevronRight size={16} />
                   </Button>
                 ) : (
-                  <Button onClick={handleSubmit} className="gap-1.5">
-                    <Send size={16} /> Submit application
+                  <Button onClick={handleSubmit} disabled={submitting} className="gap-1.5">
+                    {submitting ? (
+                      <><Loader2 size={16} className="animate-spin" /> Submitting…</>
+                    ) : (
+                      <><Send size={16} /> Submit application</>
+                    )}
                   </Button>
                 )}
               </div>

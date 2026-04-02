@@ -20,7 +20,6 @@ export interface TutorApplication {
   name: string;
   email: string;
   phone: string;
-  kennitala: string; // stored encrypted in production
   location: string;
   subjects: string[];
   rate: number;

@@ -34,6 +34,7 @@ import { Separator } from "@/components/ui/separator";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 /* ─── Section wrapper ─── */
 const Section = ({
@@ -112,7 +113,15 @@ const VerificationRow = ({
 
 const Account = () => {
   const { user, logout } = useAuth();
+  const { toast } = useToast();
   const isTutor = user?.role === "tutor";
+
+  const handleSave = () => {
+    toast({
+      title: "Changes saved",
+      description: "Your profile has been updated.",
+    });
+  };
 
   /* Sample data */
   const profileData = isTutor
@@ -291,7 +300,7 @@ const Account = () => {
               )}
 
               <div className="flex justify-end">
-                <Button className="text-sm">Save changes</Button>
+                <Button className="text-sm" onClick={handleSave}>Save changes</Button>
               </div>
             </TabsContent>
 
