@@ -18,6 +18,7 @@ import NotFound from "./pages/NotFound";
 import Messages from "./pages/Messages";
 import Bookings from "./pages/Bookings";
 import Account from "./pages/Account";
+import TutorProfileEdit from "./pages/TutorProfileEdit";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ const App = () => (
             <Route path="/messages" element={<Messages />} />
             <Route path="/bookings" element={<Bookings />} />
             <Route path="/account" element={<Account />} />
+            <Route path="/tutor-profile-edit" element={<TutorProfileEdit />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
