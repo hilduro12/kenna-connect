@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
-import { Search, ShieldCheck, BookOpen, Monitor, Star, Users, MessageCircle, ArrowRight, Lock } from "lucide-react";
+import { Search, ShieldCheck, BookOpen, Monitor, Star, Users, MessageCircle, ArrowRight, Lock, BadgeCheck, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import TutorCard from "@/components/TutorCard";
 import BlurredTutorCard from "@/components/BlurredTutorCard";
+import StarRating from "@/components/StarRating";
 import { tutors } from "@/data/tutors";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -43,34 +44,93 @@ const Index = () => {
       <Navbar />
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-white">
+      <section className="relative overflow-hidden bg-light-bg">
         <div className="container py-16 md:py-24">
-          <div className="space-y-6">
-            <h1 className="text-4xl font-extrabold leading-tight text-foreground md:text-5xl lg:text-6xl">
-              Find the teacher that's right for you
-            </h1>
-            <p className="max-w-lg text-lg text-primary">
-              Iceland's marketplace for private tutoring — all subjects, all levels.
-            </p>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <select className="rounded-lg border border-cold bg-white px-4 py-3 text-sm text-foreground placeholder:text-cold focus:outline-none focus:ring-2 focus:ring-foreground sm:w-56">
-                <option value="" className="text-cold">Select a subject...</option>
-                {subjects.map((s) => <option key={s} value={s}>{s}</option>)}
-              </select>
-              <Link to="/browse">
-                <Button size="lg" className="gap-2 bg-primary text-white hover:bg-foreground"><Search size={18} /> Search</Button>
-              </Link>
-            </div>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {categories.map((cat) => (
-                <Link
-                  key={cat.name}
-                  to={`/browse?subject=${encodeURIComponent(cat.name)}`}
-                  className="rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-foreground"
-                >
-                  {cat.name}
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            {/* Left — copy */}
+            <div className="space-y-6">
+              <h1 className="text-4xl font-extrabold leading-tight text-foreground md:text-5xl lg:text-6xl">
+                Find the teacher that's right for you
+              </h1>
+              <p className="max-w-lg text-lg text-steel">
+                All subjects, all levels — online or in person.
+              </p>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <select className="rounded-lg border border-light-border bg-white px-4 py-3 text-sm text-foreground placeholder:text-cold focus:outline-none focus:ring-2 focus:ring-foreground sm:w-56">
+                  <option value="" className="text-cold">Select a subject...</option>
+                  {subjects.map((s) => <option key={s} value={s}>{s}</option>)}
+                </select>
+                <Link to="/browse">
+                  <Button size="lg" className="gap-2 bg-primary text-white hover:bg-foreground"><Search size={18} /> Search</Button>
                 </Link>
-              ))}
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {categories.map((cat) => (
+                  <Link
+                    key={cat.name}
+                    to={`/browse?subject=${encodeURIComponent(cat.name)}`}
+                    className="rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-foreground"
+                  >
+                    {cat.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Right — floating tutor card preview */}
+            <div className="hidden lg:flex lg:justify-center">
+              <div className="relative">
+                {/* Background decorative card (peeking behind) */}
+                <div className="absolute -right-4 -top-4 h-full w-full rounded-xl border border-light-border bg-white/60 shadow-sm" />
+
+                {/* Main preview card */}
+                <div className="relative rounded-xl border border-light-border bg-white p-6 shadow-lg" style={{ width: 340 }}>
+                  <div className="flex gap-4">
+                    <img
+                      src={tutors[0].photo}
+                      alt={tutors[0].name}
+                      className="h-16 w-16 shrink-0 rounded-lg object-cover"
+                    />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <h3 className="font-semibold text-foreground">{tutors[0].name}</h3>
+                        <BadgeCheck size={16} className="shrink-0 text-primary" />
+                      </div>
+                      <div className="mt-0.5 flex items-center gap-1.5 text-sm text-muted-foreground">
+                        <MapPin size={13} />
+                        {tutors[0].location}
+                      </div>
+                      <div className="mt-1.5 flex gap-1.5">
+                        {tutors[0].subjects.map((s) => (
+                          <span key={s} className="rounded-full bg-light-bg px-2 py-0.5 text-xs font-medium text-steel">{s}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <p className="mt-4 text-sm leading-relaxed text-steel">
+                    "{tutors[0].tagline}"
+                  </p>
+                  <div className="mt-4 flex items-center justify-between border-t border-light-border pt-4">
+                    <StarRating rating={tutors[0].rating} count={tutors[0].reviewCount} />
+                    <span className="text-lg font-bold text-foreground">
+                      {tutors[0].pricePerHour.toLocaleString()} <span className="text-sm font-normal text-muted-foreground">ISK/hr</span>
+                    </span>
+                  </div>
+
+                  {/* Small floating review snippet */}
+                  <div className="absolute -bottom-6 -left-8 rounded-lg border border-light-border bg-white px-4 py-3 shadow-md" style={{ width: 240 }}>
+                    <div className="flex gap-1">
+                      {Array.from({ length: 5 }).map((_, j) => (
+                        <Star key={j} size={12} className="fill-gold text-gold" />
+                      ))}
+                    </div>
+                    <p className="mt-1 text-xs leading-relaxed text-steel">
+                      "{tutors[0].reviews[0].comment.slice(0, 70)}..."
+                    </p>
+                    <p className="mt-1 text-xs font-medium text-foreground">{tutors[0].reviews[0].name}</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

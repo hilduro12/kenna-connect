@@ -53,7 +53,7 @@ export default {
         steel: "hsl(var(--steel))",
         cold: "hsl(var(--cold))",
         "light-bg": "hsl(var(--light-bg))",
-        "light-border": "hsl(var(--light-bg))",
+        "light-border": "hsl(var(--light-border))",
         gold: "hsl(var(--gold))",
         shadow: "hsl(var(--shadow))",
         sidebar: {

@@ -13,6 +13,7 @@ interface AuthContextType {
   isSubscribed: boolean;
   previewLoggedIn: boolean;
   togglePreview: () => void;
+  toggleRole: () => void;
   login: (email: string, password: string) => void;
   logout: () => void;
   signup: (data: { name: string; email: string; password: string; role: "student" | "parent" | "tutor" }) => void;
@@ -27,9 +28,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const [previewLoggedIn, setPreviewLoggedIn] = useState(false);
-  const togglePreview = () => setPreviewLoggedIn((v) => !v);
+  const togglePreview = () => {
+    setPreviewLoggedIn((v) => {
+      const next = !v;
+      if (next && !user) {
+        const previewUser: User = {
+          id: "preview",
+          name: "Demo User",
+          email: "demo@kenna.is",
+          role: "student",
+          subscribed: true,
+        };
+        setUser(previewUser);
+      } else if (!next && user?.id === "preview") {
+        setUser(null);
+        localStorage.removeItem("kenna_user");
+      }
+      return next;
+    });
+  };
 
   const isSubscribed = (user?.subscribed ?? false) || previewLoggedIn;
+
+  const toggleRole = () => {
+    if (!user) return;
+    const newRole = user.role === "tutor" ? "student" : "tutor";
+    const updated = { ...user, role: newRole as User["role"] };
+    setUser(updated);
+    localStorage.setItem("kenna_user", JSON.stringify(updated));
+  };
 
   const login = (email: string, _password: string) => {
     const mockUser: User = {
@@ -61,7 +88,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isSubscribed, previewLoggedIn, togglePreview, login, logout, signup }}>
+    <AuthContext.Provider value={{ user, isSubscribed, previewLoggedIn, togglePreview, toggleRole, login, logout, signup }}>
       {children}
     </AuthContext.Provider>
   );

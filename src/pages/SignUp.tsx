@@ -11,7 +11,7 @@ const SignUp = () => {
   const handleEmailSignup = (e: React.FormEvent) => {
     e.preventDefault();
     signup({ name: email.split("@")[0], email, password: "", role: "student" });
-    navigate("/browse");
+    navigate("/dashboard");
   };
 
   return (

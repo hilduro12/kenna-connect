@@ -12,7 +12,7 @@ const Login = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     login(email, password);
-    navigate("/browse");
+    navigate("/dashboard");
   };
 
   return (

@@ -12,6 +12,8 @@ import TutorSignUp from "./pages/TutorSignUp";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import Pricing from "./pages/Pricing";
+import Dashboard from "./pages/Dashboard";
+import TutorDashboard from "./pages/TutorDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +28,8 @@ const App = () => (
           <PreviewToggle />
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/tutor-dashboard" element={<TutorDashboard />} />
             <Route path="/browse" element={<BrowseTutors />} />
             <Route path="/tutor/:id" element={<TutorProfile />} />
             <Route path="/tutor-signup" element={<TutorSignUp />} />
