@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
-import { BadgeCheck, MapPin, Clock, Lock, ArrowLeft } from "lucide-react";
+import { BadgeCheck, MapPin, Clock, ArrowLeft } from "lucide-react";
+import RequestLessonDialog from "@/components/RequestLessonDialog";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
