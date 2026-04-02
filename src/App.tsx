@@ -18,6 +18,7 @@ import NotFound from "./pages/NotFound";
 import Messages from "./pages/Messages";
 import Bookings from "./pages/Bookings";
 import Account from "./pages/Account";
+import TutorProfileEdit from "./pages/TutorProfileEdit";
 
 const queryClient = new QueryClient();
 
