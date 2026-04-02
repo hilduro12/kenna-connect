@@ -39,9 +39,9 @@ const Pricing = () => {
           <span className={`text-sm font-medium ${!annual ? "text-foreground" : "text-muted-foreground"}`}>Monthly</span>
           <button
             onClick={() => setAnnual(!annual)}
-            className={`relative h-7 w-12 rounded-full transition-colors ${annual ? "bg-primary" : "bg-border"}`}
+            className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors ${annual ? "bg-primary" : "bg-cold"}`}
           >
-            <span className={`absolute top-0.5 h-6 w-6 rounded-full bg-white shadow transition-transform ${annual ? "translate-x-5" : "translate-x-0.5"}`} />
+            <span className={`inline-block h-5 w-5 rounded-full bg-white shadow-md transition-transform ${annual ? "translate-x-6" : "translate-x-1"}`} />
           </button>
           <span className={`text-sm font-medium ${annual ? "text-foreground" : "text-muted-foreground"}`}>
             Annual <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">Save 20%</span>

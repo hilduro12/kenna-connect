@@ -1,21 +1,29 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, ShieldCheck, BookOpen, Monitor, Star, Users, MessageCircle, ArrowRight, Lock, BadgeCheck, MapPin } from "lucide-react";
+import {
+  Search, ShieldCheck, BookOpen, Monitor, Star, Users, MessageCircle,
+  ArrowRight, Lock, BadgeCheck, Calculator, Globe,
+  FlaskConical, Languages, Laptop, Pen, ChevronDown,
+  GraduationCap, Atom,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import TutorCard from "@/components/TutorCard";
 import BlurredTutorCard from "@/components/BlurredTutorCard";
-import StarRating from "@/components/StarRating";
 import { tutors } from "@/data/tutors";
 import { useAuth } from "@/contexts/AuthContext";
 
-
 const subjects = [
-  "Mathematics", "Driving", "Piano", "Singing",
-  "Personal Training", "English", "Guitar", "Photography",
+  { name: "Mathematics", icon: Calculator, color: "text-blue-600" },
+  { name: "English", icon: Languages, color: "text-green-600" },
+  { name: "Icelandic", icon: Globe, color: "text-sky-600" },
+  { name: "Danish", icon: Pen, color: "text-teal-600" },
+  { name: "Physics", icon: Atom, color: "text-indigo-600" },
+  { name: "Chemistry", icon: FlaskConical, color: "text-purple-600" },
+  { name: "Computer Science", icon: Laptop, color: "text-orange-600" },
+  { name: "History", icon: GraduationCap, color: "text-violet-600" },
 ];
-
-const categories = subjects.map((name) => ({ name }));
 
 const steps = [
   { icon: Search, title: "Search", desc: "Browse teachers by subject, location, and price." },
@@ -25,7 +33,7 @@ const steps = [
 
 const benefits = [
   { icon: ShieldCheck, title: "Verified Teachers", desc: "Every teacher is reviewed and approved before joining the platform." },
-  { icon: BookOpen, title: "All Subjects", desc: "From mathematics to music — find help in any subject area." },
+  { icon: BookOpen, title: "All Subjects", desc: "From mathematics to science — find help in any subject area." },
   { icon: Monitor, title: "In-Person & Online", desc: "Learn face to face or from the comfort of your home." },
   { icon: Star, title: "Trusted Reviews", desc: "Read honest reviews from real students and parents." },
 ];
@@ -36,8 +44,48 @@ const testimonials = [
   { name: "Sarah Thompson", role: "Expat Parent", quote: "As a newcomer to Iceland, Kenna helped us find an Icelandic language teacher quickly. Highly recommended!" },
 ];
 
+/* ── Hero: Journey Path ── */
+
+const HeroJourneyPath = () => (
+  <div className="flex w-[340px] flex-col items-center gap-0">
+    {[
+      { icon: Search, label: "Find your teacher", desc: "Browse by subject & location", color: "bg-blue-50 text-blue-600", borderColor: "border-blue-200" },
+      { icon: MessageCircle, label: "Connect & chat", desc: "Message before you book", color: "bg-green-50 text-green-600", borderColor: "border-green-200" },
+      { icon: BookOpen, label: "Start learning", desc: "Online or in person", color: "bg-purple-50 text-purple-600", borderColor: "border-purple-200" },
+    ].map((step, i) => (
+      <div key={i} className="flex flex-col items-center">
+        {i > 0 && (
+          <div className="flex h-10 flex-col items-center">
+            <div className="h-full w-px border-l-2 border-dashed border-light-border" />
+            <ChevronDown size={16} className="text-cold -mt-1" />
+          </div>
+        )}
+        <div className={`flex w-[320px] items-center gap-4 rounded-xl border ${step.borderColor} bg-white p-5 shadow-sm transition-transform hover:scale-[1.02] hover:shadow-md`}>
+          <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl ${step.color}`}>
+            <step.icon size={24} />
+          </div>
+          <div className="flex-1">
+            <p className="font-semibold text-foreground">{step.label}</p>
+            <p className="mt-0.5 text-sm text-steel">{step.desc}</p>
+          </div>
+          {i === 2 && (
+            <div className="shrink-0 flex gap-0.5">
+              {Array.from({ length: 5 }).map((_, j) => (
+                <Star key={j} size={10} className="fill-gold text-gold" />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+/* ── Main component ── */
+
 const Index = () => {
   const { isSubscribed } = useAuth();
+  const [selectedSubject, setSelectedSubject] = useState("");
 
   return (
     <div className="min-h-screen">
@@ -56,105 +104,56 @@ const Index = () => {
                 All subjects, all levels — online or in person.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <select className="rounded-lg border border-light-border bg-white px-4 py-3 text-sm text-foreground placeholder:text-cold focus:outline-none focus:ring-2 focus:ring-foreground sm:w-56">
+                <select
+                  value={selectedSubject}
+                  onChange={(e) => setSelectedSubject(e.target.value)}
+                  className="rounded-lg border border-light-border bg-white px-4 py-3 text-sm text-foreground placeholder:text-cold focus:outline-none focus:ring-2 focus:ring-foreground sm:w-56"
+                >
                   <option value="" className="text-cold">Select a subject...</option>
-                  {subjects.map((s) => <option key={s} value={s}>{s}</option>)}
+                  {subjects.map((s) => <option key={s.name} value={s.name}>{s.name}</option>)}
                 </select>
-                <Link to="/browse">
+                <Link to={selectedSubject ? `/browse?subject=${encodeURIComponent(selectedSubject)}` : "/browse"}>
                   <Button size="lg" className="gap-2 bg-primary text-white hover:bg-foreground"><Search size={18} /> Search</Button>
                 </Link>
               </div>
               <div className="mt-4 flex flex-wrap gap-2">
-                {categories.map((cat) => (
+                {subjects.map((sub) => (
                   <Link
-                    key={cat.name}
-                    to={`/browse?subject=${encodeURIComponent(cat.name)}`}
-                    className="rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-foreground"
+                    key={sub.name}
+                    to={`/browse?subject=${encodeURIComponent(sub.name)}`}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-white border border-light-border px-3.5 py-1.5 text-sm font-medium text-steel shadow-sm transition-all hover:shadow-md hover:border-primary hover:text-foreground"
                   >
-                    {cat.name}
+                    <sub.icon size={14} className={sub.color} />
+                    {sub.name}
                   </Link>
                 ))}
               </div>
             </div>
 
-            {/* Right — floating tutor card preview */}
+            {/* Right — Journey Path hero */}
             <div className="hidden lg:flex lg:justify-center">
-              <div className="relative">
-                {/* Background decorative card (peeking behind) */}
-                <div className="absolute -right-4 -top-4 h-full w-full rounded-xl border border-light-border bg-white/60 shadow-sm" />
-
-                {/* Main preview card */}
-                <div className="relative rounded-xl border border-light-border bg-white p-6 shadow-lg" style={{ width: 340 }}>
-                  <div className="flex gap-4">
-                    <img
-                      src={tutors[0].photo}
-                      alt={tutors[0].name}
-                      className="h-16 w-16 shrink-0 rounded-lg object-cover"
-                    />
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <h3 className="font-semibold text-foreground">{tutors[0].name}</h3>
-                        <BadgeCheck size={16} className="shrink-0 text-primary" />
-                      </div>
-                      <div className="mt-0.5 flex items-center gap-1.5 text-sm text-muted-foreground">
-                        <MapPin size={13} />
-                        {tutors[0].location}
-                      </div>
-                      <div className="mt-1.5 flex gap-1.5">
-                        {tutors[0].subjects.map((s) => (
-                          <span key={s} className="rounded-full bg-light-bg px-2 py-0.5 text-xs font-medium text-steel">{s}</span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <p className="mt-4 text-sm leading-relaxed text-steel">
-                    "{tutors[0].tagline}"
-                  </p>
-                  <div className="mt-4 flex items-center justify-between border-t border-light-border pt-4">
-                    <StarRating rating={tutors[0].rating} count={tutors[0].reviewCount} />
-                    <span className="text-lg font-bold text-foreground">
-                      {tutors[0].pricePerHour.toLocaleString()} <span className="text-sm font-normal text-muted-foreground">ISK/hr</span>
-                    </span>
-                  </div>
-
-                  {/* Small floating review snippet */}
-                  <div className="absolute -bottom-6 -left-8 rounded-lg border border-light-border bg-white px-4 py-3 shadow-md" style={{ width: 240 }}>
-                    <div className="flex gap-1">
-                      {Array.from({ length: 5 }).map((_, j) => (
-                        <Star key={j} size={12} className="fill-gold text-gold" />
-                      ))}
-                    </div>
-                    <p className="mt-1 text-xs leading-relaxed text-steel">
-                      "{tutors[0].reviews[0].comment.slice(0, 70)}..."
-                    </p>
-                    <p className="mt-1 text-xs font-medium text-foreground">{tutors[0].reviews[0].name}</p>
-                  </div>
-                </div>
-              </div>
+              <HeroJourneyPath />
             </div>
           </div>
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="container py-16 md:py-20">
-        <h2 className="text-center text-3xl font-bold text-foreground">How it works</h2>
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {steps.map((step, i) => (
-            <div key={i} className="rounded-lg border border-border bg-card p-8 text-center shadow-sm">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <step.icon size={24} />
-              </div>
-              <h3 className="mt-5 text-xl font-semibold text-foreground">{step.title}</h3>
-              <p className="mt-2 text-sm text-steel">{step.desc}</p>
+      {/* Why Kenna */}
+      <section className="container py-10 md:py-12">
+        <h2 className="text-center text-3xl font-bold text-foreground">Why Kenna?</h2>
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {benefits.map((b, i) => (
+            <div key={i} className="rounded-lg bg-background border border-border p-6 shadow-sm">
+              <b.icon size={28} className="text-primary" />
+              <h3 className="mt-4 text-lg font-semibold text-foreground">{b.title}</h3>
+              <p className="mt-2 text-sm text-steel">{b.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-
       {/* Featured teachers */}
-      <section className="container py-16 md:py-20">
+      <section className="container py-10 md:py-12">
         {isSubscribed ? (
           <>
             <div className="flex items-center justify-between">
@@ -187,24 +186,8 @@ const Index = () => {
         )}
       </section>
 
-      {/* Why Kenna */}
-      <section className="bg-light-bg py-16">
-        <div className="container">
-          <h2 className="text-center text-3xl font-bold text-foreground">Why Kenna?</h2>
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {benefits.map((b, i) => (
-              <div key={i} className="rounded-lg bg-background p-6 shadow-sm">
-                <b.icon size={28} className="text-primary" />
-                <h3 className="mt-4 text-lg font-semibold text-foreground">{b.title}</h3>
-                <p className="mt-2 text-sm text-steel">{b.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Testimonials */}
-      <section className="container py-16 md:py-20">
+      <section className="container py-10 md:py-12">
         <h2 className="text-center text-3xl font-bold text-foreground">What people say</h2>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {testimonials.map((t, i) => (
@@ -221,7 +204,7 @@ const Index = () => {
       </section>
 
       {/* CTA */}
-      <section className="bg-primary py-16 text-center text-primary-foreground">
+      <section className="bg-primary py-10 md:py-12 text-center text-primary-foreground">
         <div className="container space-y-5">
           <h2 className="text-3xl font-bold">Ready to start learning?</h2>
           <p className="mx-auto max-w-md text-primary-foreground/80">

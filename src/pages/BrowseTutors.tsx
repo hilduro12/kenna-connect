@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
@@ -9,7 +10,7 @@ import { tutors } from "@/data/tutors";
 import { useAuth } from "@/contexts/AuthContext";
 
 const allSubjects = ["All Subjects", "Mathematics", "English", "Danish", "Physics", "Icelandic", "Chemistry", "Computer Science", "History"];
-const allLocations = ["All Locations", "Reykjavik", "Kopavogur", "Hafnarfjordur", "Akureyri", "Online"];
+const allLocations = ["All Locations", "Online", "Reykjavík", "Kópavogur", "Hafnarfjörður", "Garðabær", "Mosfellsbær", "Reykjanesbær", "Akureyri", "Selfoss", "Akranes"];
 const sortOptions = [
   { value: "rating", label: "Highest rated" },
   { value: "price-low", label: "Lowest price" },
@@ -18,9 +19,10 @@ const sortOptions = [
 
 const BrowseTutors = () => {
   const { isSubscribed } = useAuth();
-  const [subject, setSubject] = useState("All Subjects");
+  const [searchParams] = useSearchParams();
+  const initialSubject = searchParams.get("subject") || "All Subjects";
+  const [subject, setSubject] = useState(initialSubject);
   const [location, setLocation] = useState("All Locations");
-  const [minRating, setMinRating] = useState(0);
   const [maxPrice, setMaxPrice] = useState(15000);
   const [sort, setSort] = useState("rating");
   const [showFilters, setShowFilters] = useState(false);
@@ -29,7 +31,6 @@ const BrowseTutors = () => {
     let result = tutors.filter((t) => {
       if (subject !== "All Subjects" && !t.subjects.includes(subject)) return false;
       if (location !== "All Locations" && t.location !== location) return false;
-      if (t.rating < minRating) return false;
       if (t.pricePerHour > maxPrice) return false;
       return true;
     });
@@ -40,7 +41,7 @@ const BrowseTutors = () => {
       return 0;
     });
     return result;
-  }, [subject, location, minRating, maxPrice, sort]);
+  }, [subject, location, maxPrice, sort]);
 
   const FilterPanel = () => (
     <div className="space-y-6">
@@ -61,16 +62,6 @@ const BrowseTutors = () => {
         <input type="range" min={3000} max={15000} step={500} value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} className="w-full accent-primary" />
         <div className="flex justify-between text-xs text-muted-foreground"><span>3,000</span><span>15,000</span></div>
       </div>
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-foreground">Min rating: {minRating > 0 ? `${minRating}+` : "Any"}</label>
-        <div className="flex gap-2">
-          {[0, 3, 4, 4.5].map((r) => (
-            <button key={r} onClick={() => setMinRating(r)} className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${minRating === r ? "border-primary bg-primary text-primary-foreground" : "border-border text-steel hover:bg-light-bg"}`}>
-              {r === 0 ? "Any" : `${r}+`}
-            </button>
-          ))}
-        </div>
-      </div>
     </div>
   );
 
@@ -87,9 +78,6 @@ const BrowseTutors = () => {
             <button onClick={() => setShowFilters(!showFilters)} className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-steel md:hidden">
               <SlidersHorizontal size={16} /> Filters
             </button>
-            <select value={sort} onChange={(e) => setSort(e.target.value)} className="rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
-              {sortOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-            </select>
           </div>
         </div>
 
