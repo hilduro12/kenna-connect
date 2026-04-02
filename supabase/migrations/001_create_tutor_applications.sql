@@ -26,13 +26,16 @@ create table if not exists tutor_applications (
 -- but only authenticated service-role can read/update (admin panel, future).
 alter table tutor_applications enable row level security;
 
+-- Unique email per application
+alter table tutor_applications add constraint tutor_applications_email_unique unique (email);
+
 -- Allow anonymous inserts (the application form is public)
 create policy "Anyone can submit an application"
   on tutor_applications
   for insert
   with check (true);
 
--- Allow the applicant to read their own row by email (optional, for status page later)
+-- Allow the applicant to read their own row by email (for status page later)
 create policy "Applicants can view own application"
   on tutor_applications
   for select

@@ -57,6 +57,9 @@ const TutorSignUp = () => {
   const [education, setEducation] = useState("");
   const [availability, setAvailability] = useState<string[]>([]);
   const [teachingFormat, setTeachingFormat] = useState("");
+  const [phoneTouched, setPhoneTouched] = useState(false);
+  const [showOtherSubject, setShowOtherSubject] = useState(false);
+  const [otherSubject, setOtherSubject] = useState("");
 
   const toggleSubject = (s: string) =>
     setSubjects((prev) => (prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]));
@@ -68,19 +71,24 @@ const TutorSignUp = () => {
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   /* ── Validation ── */
-  const step1Valid = name.trim() && email.trim() && phone.trim() && location;
-  const step2Valid = subjects.length > 0 && rate && bio.trim() && availability.length > 0 && teachingFormat;
+  const step1Valid = name.trim() && email.trim() && /^\d{7}$/.test(phone.replace(/\s/g, "")) && location;
+  const hasSubjects = subjects.length > 0 || (showOtherSubject && otherSubject.trim());
+  const step2Valid = hasSubjects && rate && bio.trim() && availability.length > 0 && teachingFormat;
 
   const handleSubmit = async () => {
     setSubmitting(true);
     setSubmitError(null);
+
+    const allSelectedSubjects = showOtherSubject && otherSubject.trim()
+      ? [...subjects, otherSubject.trim()]
+      : subjects;
 
     const { error } = await supabase.from("tutor_applications").insert({
       name: name.trim(),
       email: email.trim(),
       phone: phone.trim(),
       location,
-      subjects,
+      subjects: allSelectedSubjects,
       rate: Number(rate),
       bio: bio.trim(),
       experience: experience.trim() || null,
@@ -94,11 +102,16 @@ const TutorSignUp = () => {
 
     if (error) {
       console.error("Supabase insert error:", error);
-      setSubmitError("Something went wrong. Please try again.");
+      if (error.code === "23505") {
+        setSubmitError("An application with this email already exists. If you need to update your application, please contact us.");
+      } else {
+        setSubmitError("Something went wrong. Please try again.");
+      }
       return;
     }
 
     setStep(4); // success screen
+    window.scrollTo(0, 0);
   };
 
   return (
@@ -246,10 +259,14 @@ const TutorSignUp = () => {
                       <label className="mb-1 block text-sm font-medium text-foreground">Phone *</label>
                       <input
                         className={inputClass}
-                        placeholder="+354 ..."
+                        placeholder="e.g. 555 1234"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
+                        onBlur={() => setPhoneTouched(true)}
                       />
+                      {phoneTouched && phone.trim() && !/^\d{7}$/.test(phone.replace(/\s/g, "")) && (
+                        <p className="mt-1 text-xs text-red-500">Please enter a valid 7-digit phone number</p>
+                      )}
                     </div>
                     <div>
                       <label className="mb-1 block text-sm font-medium text-foreground">Location *</label>
@@ -294,7 +311,27 @@ const TutorSignUp = () => {
                           {s}
                         </button>
                       ))}
+                      <button
+                        type="button"
+                        onClick={() => setShowOtherSubject(!showOtherSubject)}
+                        className={`rounded-full border px-3 py-1.5 text-sm transition ${
+                          showOtherSubject
+                            ? "border-primary bg-primary/10 font-medium text-primary"
+                            : "border-border text-steel hover:bg-light-bg"
+                        }`}
+                      >
+                        {showOtherSubject && <Check size={14} className="mr-1 inline" />}
+                        Other
+                      </button>
                     </div>
+                    {showOtherSubject && (
+                      <input
+                        className={inputClass + " mt-2"}
+                        placeholder="Enter subject name"
+                        value={otherSubject}
+                        onChange={(e) => setOtherSubject(e.target.value)}
+                      />
+                    )}
                   </div>
 
                   <div className="grid gap-4 sm:grid-cols-2">
@@ -426,8 +463,8 @@ const TutorSignUp = () => {
                     <div>
                       <p className="text-xs font-semibold uppercase text-cold">Subjects</p>
                       <div className="mt-1 flex flex-wrap gap-1.5">
-                        {subjects.length > 0
-                          ? subjects.map((s) => (
+                        {[...subjects, ...(showOtherSubject && otherSubject.trim() ? [otherSubject.trim()] : [])].length > 0
+                          ? [...subjects, ...(showOtherSubject && otherSubject.trim() ? [otherSubject.trim()] : [])].map((s) => (
                               <span key={s} className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
                                 {s}
                               </span>
@@ -455,16 +492,6 @@ const TutorSignUp = () => {
                     )}
                   </div>
 
-                  {/* Reminder */}
-                  <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4">
-                    <AlertCircle size={20} className="mt-0.5 shrink-0 text-amber-600" />
-                    <div>
-                      <p className="text-sm font-semibold text-foreground">This is an application, not a sign-up</p>
-                      <p className="mt-0.5 text-xs text-steel">
-                        Your application will be reviewed by our team. Once approved, you'll receive an email with a link to set your password and access your teacher dashboard. Typical review time is 1–2 business days.
-                      </p>
-                    </div>
-                  </div>
                 </div>
               )}
 
